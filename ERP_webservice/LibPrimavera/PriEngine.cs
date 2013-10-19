@@ -31,8 +31,15 @@ namespace FirstREST.Lib_Primavera
 			objAplConf.Utilizador = Password;
 			StdBETransaccao objStdTransac = new StdBETransaccao();
 			// Opem platform.
-			Plataforma.AbrePlataformaEmpresaIntegrador(ref Company, ref objStdTransac, ref objAplConf, ref objTipoPlataforma);
-			// Is plt initialized?
+			try
+			{
+				Plataforma.AbrePlataformaEmpresaIntegrador(ref Company, ref objStdTransac, ref objAplConf, ref objTipoPlataforma);
+				// Is plt initialized?
+			}
+			catch (System.Runtime.InteropServices.COMException) 
+			{
+				return false;
+			}
 			if (Plataforma.Inicializada)
 			{
 				// Retuns the ptl.
