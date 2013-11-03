@@ -27,8 +27,8 @@ namespace FirstREST.Lib_Primavera
 			objTipoPlataforma = EnumTipoPlataforma.tpProfissional;
 			objAplConf.Instancia = "Default";
 			objAplConf.AbvtApl = "GCP";
-			objAplConf.PwdUtilizador = User;
-			objAplConf.Utilizador = Password;
+			objAplConf.PwdUtilizador = Password;
+			objAplConf.Utilizador = User;
 			StdBETransaccao objStdTransac = new StdBETransaccao();
 			// Opem platform.
 			try
