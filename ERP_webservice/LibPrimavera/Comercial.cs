@@ -15,6 +15,68 @@ namespace FirstREST.Lib_Primavera
 	public class Comercial
 	{
 
+		public static List<Model.Order> OrdersList()
+		{
+			ErpBS objMotor = new ErpBS();
+			//MotorPrimavera mp = new MotorPrimavera();
+			StdBELista objList;
+			Model.Order ord = new Model.Order();
+			List<Model.Order> listOrders = new List<Model.Order>();
+			if (PriEngine.Platform.Inicializada)
+			{
+
+				//if (PriEngine.InitializeCompany("BELAFLOR", "admin", "admin") == true){
+				String query = "SELECT * FROM PRIBELAFLOR.dbo.CabecDoc";
+				objList = PriEngine.Engine.Consulta(query);
+				while (!objList.NoFim())
+				{
+					ord = new Model.Order();
+					ord.CodClient = objList.Valor("Entidade");
+					ord.modPag = objList.Valor("ModoPag");
+					ord.numContrib = objList.Valor("NumContribuinte");
+					ord.totalMerc = objList.Valor("TotalMerc");
+					ord.totalIva = objList.Valor("TotalIva");
+					ord.moeda = objList.Valor("Moeda");
+					listOrders.Add(ord);
+					objList.Seguinte();
+				}
+				return listOrders;
+			}
+			else
+				return null;
+		}
+
+		public static List<Model.Order> OrdersList(string cliente)
+		{
+			ErpBS objMotor = new ErpBS();
+			//MotorPrimavera mp = new MotorPrimavera();
+			StdBELista objList;
+			Model.Order ord = new Model.Order();
+			List<Model.Order> listOrders = new List<Model.Order>();
+			if (PriEngine.Platform.Inicializada)
+			{
+
+				//if (PriEngine.InitializeCompany("BELAFLOR", "admin", "admin") == true){
+				String query = "SELECT * FROM PRIBELAFLOR.dbo.CabecDoc where entidade='"+cliente+"'";
+				objList = PriEngine.Engine.Consulta(query);
+				while (!objList.NoFim())
+				{
+					ord = new Model.Order();
+					ord.CodClient = objList.Valor("Entidade");
+					ord.modPag = objList.Valor("ModoPag");
+					ord.numContrib = objList.Valor("NumContribuinte");
+					ord.totalMerc = objList.Valor("TotalMerc");
+					ord.totalIva = objList.Valor("TotalIva");
+					ord.moeda = objList.Valor("Moeda");
+					listOrders.Add(ord);
+					objList.Seguinte();
+				}
+				return listOrders;
+			}
+			else
+				return null;
+		}
+
 		# region Cliente
 		public static List<Model.Cliente> ListaClientes()
 		{
@@ -23,17 +85,19 @@ namespace FirstREST.Lib_Primavera
 			StdBELista objList;
 			Model.Cliente cli = new Model.Cliente();
 			List<Model.Cliente> listClientes = new List<Model.Cliente>();
-			if (PriEngine.InitializeCompany("BELAFLOR", "", "") == true)
-			{
+			if(PriEngine.Platform.Inicializada){
+
+			//if (PriEngine.InitializeCompany("BELAFLOR", "admin", "admin") == true){
 				//objList = PriEngine.Engine.Comercial.Clientes.LstClientes();
-				objList = PriEngine.Engine.Consulta("SELECT Cliente, Nome, Moeda, NumContrib as NumContribuinte FROM  CLIENTES");
+				String query = "SELECT * FROM PRIBELAFLOR.dbo.Clientes";
+				objList = PriEngine.Engine.Consulta(query);
 				while (!objList.NoFim())
 				{
 					cli = new Model.Cliente();
 					cli.CodCliente = objList.Valor("Cliente");
 					cli.NomeCliente = objList.Valor("Nome");
 					cli.Moeda = objList.Valor("Moeda");
-					cli.NumContribuinte = objList.Valor("NumContribuinte");
+					//cli.NumContribuinte = objList.Valor("NumContribuinte");
 					listClientes.Add(cli);
 					objList.Seguinte();
 				}

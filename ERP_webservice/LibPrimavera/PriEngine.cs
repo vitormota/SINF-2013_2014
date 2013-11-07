@@ -47,6 +47,7 @@ namespace FirstREST.Lib_Primavera
 				bool blnModoPrimario = true;
 				// Open Engine
 				MotorLE.AbreEmpresaTrabalho(EnumTipoPlataforma.tpProfissional, ref Company, ref User, ref Password, ref objStdTransac, "Default", ref blnModoPrimario);
+				
 				// Returns the engine.
 				Engine = MotorLE;
 				return true;

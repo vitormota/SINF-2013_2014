@@ -32,6 +32,21 @@ namespace FirstREST.Controllers
 				return cliente;
 			}
 		}
+		// GET api/cliente/5 
+		public Cliente Get(string id,string id2)
+		{
+			Lib_Primavera.Model.Cliente cliente = Lib_Primavera.Comercial.GetCliente(id);
+			if (cliente == null)
+			{
+				throw new HttpResponseException(
+				Request.CreateResponse(HttpStatusCode.NotFound));
+
+			}
+			else
+			{
+				return cliente;
+			}
+		}
 		public HttpResponseMessage Post(Lib_Primavera.Model.Cliente cliente)
 		{
 			Lib_Primavera.Model.RespostaErro erro = new Lib_Primavera.Model.RespostaErro();
