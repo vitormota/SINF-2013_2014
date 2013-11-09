@@ -7,6 +7,9 @@ namespace FirstREST.Lib_Primavera.Model
 {
 	public class Order
 	{
+
+		public string modExpedicao { get; set; }
+
 		public string CodClient
 		{
 			get;
@@ -25,11 +28,26 @@ namespace FirstREST.Lib_Primavera.Model
 			set;
 		}
 
+		public DateTime date
+		{
+			get;
+			set;
+		}
+
+		//public double total;
+
+		//public double getTotal()
+		//{
+		//	return totalIva + totalMerc;
+		//}
+
 		public string modPag
 		{
 			get;
 			set;
 		}
+
+		public string condPag { get; set; }
 
 		public string numContrib
 		{

@@ -27,5 +27,20 @@ namespace FirstREST.Controllers
 		{
 			return Lib_Primavera.Comercial.OrdersList(clienteId);
 		}
+
+		//
+		// GET: api/orders?clienteId=username&from=yyyy-mm-dd&to=yyyy-mm-dd
+		// 
+		// OR
+		//
+		// api/orders?clienteId=username&from=yyyy-mm-dd&to=nd
+		//
+		// nd - not defined
+		//
+		public IEnumerable<Lib_Primavera.Model.Order> Get(string clienteId, string from, string to)
+		{
+			return Lib_Primavera.Comercial.OrdersList(clienteId,from,to);
+		}
+
     }
 }

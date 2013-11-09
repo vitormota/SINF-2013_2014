@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Web.Http;
 using FirstREST.Lib_Primavera.Model;
 using Interop.StdPlatBS800;
+using Interop.StdBE800;
 
 namespace FirstREST.Controllers
 {
@@ -38,7 +39,7 @@ namespace FirstREST.Controllers
 					case "":
 						//admin detected
 						return "{type:1}";
-					case "cliente":
+					case "Guest":
 						//client detected
 						return "{type:3}";
 					default:
@@ -48,6 +49,21 @@ namespace FirstREST.Controllers
 			}
 			else
 			{
+				//Attempt to verify DB for clients orders with this id on
+				//first log as guest (the guest password is still required)
+				if (FirstREST.Lib_Primavera.PriEngine.InitializeCompany("BELAFLOR", "guest", password))
+				{
+					String query = "SELECT * FROM PRIBELAFLOR.dbo.CabecDoc where entidade='" + username + "'";
+					StdBELista objList = FirstREST.Lib_Primavera.PriEngine.Engine.Consulta(query);
+					//if query returns non empty table then it is a client id
+					if (!objList.Vazia())
+					{
+						query = "SELECT NOME FROM [PRIBELAFLOR].[dbo].[Clientes] WHERE cliente="+username;
+						string name = FirstREST.Lib_Primavera.PriEngine.Engine.Consulta(query).Valor("Nome");
+						return "{type:3, name:"+name+"}";
+
+					}
+				}
 				return "{type:0}";
 			}
 		}

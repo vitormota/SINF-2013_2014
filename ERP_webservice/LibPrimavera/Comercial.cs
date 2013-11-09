@@ -8,8 +8,6 @@ using Interop.StdBE800;
 using Interop.GcpBE800;
 using ADODB;
 using Interop.IGcpBS800;
-//using Interop.StdBESql800;
-//using Interop.StdBSSql800;
 namespace FirstREST.Lib_Primavera
 {
 	public class Comercial
@@ -37,6 +35,9 @@ namespace FirstREST.Lib_Primavera
 					ord.totalMerc = objList.Valor("TotalMerc");
 					ord.totalIva = objList.Valor("TotalIva");
 					ord.moeda = objList.Valor("Moeda");
+					ord.date = objList.Valor("Data");
+					ord.condPag = getCondPagamentoById(objList.Valor("CondPag"));
+					ord.modExpedicao = getModExpedicaoById(objList.Valor("ModoExp"));
 					listOrders.Add(ord);
 					objList.Seguinte();
 				}
@@ -44,6 +45,22 @@ namespace FirstREST.Lib_Primavera
 			}
 			else
 				return null;
+		}
+
+		private static string getCondPagamentoById(string id) {
+			//workaround
+			if (id.Length == 1) id = "0" + id;
+			//----------
+			string query = "select descricao from PRIBELAFLOR.dbo.condPag where condpag=" + id;
+			StdBELista objList = PriEngine.Engine.Consulta(query);
+			return objList.Valor("Descricao");
+		}
+
+		private static string getModExpedicaoById(string id) {
+			if (id == "") return "Nao definido.";
+			string query = "select descricao from PRIBELAFLOR.dbo.ModosExp where ModoExp='"+id+"'";
+			StdBELista objList = PriEngine.Engine.Consulta(query);
+			return objList.Valor("Descricao");
 		}
 
 		public static List<Model.Order> OrdersList(string cliente)
@@ -68,6 +85,48 @@ namespace FirstREST.Lib_Primavera
 					ord.totalMerc = objList.Valor("TotalMerc");
 					ord.totalIva = objList.Valor("TotalIva");
 					ord.moeda = objList.Valor("Moeda");
+					ord.date = objList.Valor("Data");
+					ord.condPag = getCondPagamentoById(objList.Valor("CondPag"));
+					ord.modExpedicao = getModExpedicaoById(objList.Valor("ModoExp"));
+					listOrders.Add(ord);
+					objList.Seguinte();
+				}
+				return listOrders;
+			}
+			else
+				return null;
+		}
+
+		/**
+		 * Get orders from client <cliente> between dates from & to (yyyy-mm-dd)
+		 * to make date unspecified pass value "nd" for any of the dates
+		 * 
+		 * */
+		public static List<Model.Order> OrdersList(string cliente, string from, string to)
+		{
+			string query = "SELECT * FROM PRIBELAFLOR.dbo.CabecDoc where entidade='" + cliente + "'";
+			if(from != "nd") query += " and Data>='"+from+"'";
+			if(to != "nd") query += " and Data<='"+to+"'";
+
+			ErpBS objMotor = new ErpBS();
+			StdBELista objList;
+			Model.Order ord = new Model.Order();
+			List<Model.Order> listOrders = new List<Model.Order>();
+			if (PriEngine.Platform.Inicializada)
+			{
+				objList = PriEngine.Engine.Consulta(query);
+				while (!objList.NoFim())
+				{
+					ord = new Model.Order();
+					ord.CodClient = objList.Valor("Entidade");
+					ord.modPag = objList.Valor("ModoPag");
+					ord.numContrib = objList.Valor("NumContribuinte");
+					ord.totalMerc = objList.Valor("TotalMerc");
+					ord.totalIva = objList.Valor("TotalIva");
+					ord.moeda = objList.Valor("Moeda");
+					ord.date = objList.Valor("Data");
+					ord.condPag = getCondPagamentoById(objList.Valor("CondPag"));
+					ord.modExpedicao = getModExpedicaoById(objList.Valor("ModoExp"));
 					listOrders.Add(ord);
 					objList.Seguinte();
 				}
