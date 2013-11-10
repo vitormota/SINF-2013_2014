@@ -97,6 +97,42 @@ namespace FirstREST.Lib_Primavera
 				return null;
 		}
 
+		public static List<Model.Vendedores> VendedoresList()
+		{
+			ErpBS objMotor = new ErpBS();
+			//MotorPrimavera mp = new MotorPrimavera();
+			StdBELista objList;
+			Model.Vendedores seller = new Model.Vendedores();
+			List<Model.Vendedores> listVendedores = new List<Model.Vendedores>();
+			if (PriEngine.Platform.Inicializada)
+			{
+
+				//if (PriEngine.InitializeCompany("BELAFLOR", "admin", "admin") == true){
+				String query = "SELECT * FROM PRIBELAFLOR.dbo.Fornecedores";
+				objList = PriEngine.Engine.Consulta(query);
+				while (!objList.NoFim())
+				{
+					seller = new Model.Vendedores();
+					seller.Nome = objList.Valor("Nome");
+					seller.Morada = objList.Valor("Morada");
+					seller.Local = objList.Valor("Local");
+					seller.Tel = objList.Valor("Tel");
+					seller.PrazoEntrega = objList.Valor("PrazoEnt");
+					seller.NumContrib = objList.Valor("NumContrib");
+					seller.DataUltAct = objList.Valor("DataUltimaActualizacao");
+					seller.EncomendasPendentes = objList.Valor("EncomendasPendentes");
+					seller.Descricao = objList.Valor("Descricao");
+					seller.Fax = objList.Valor("Fax");
+					seller.EnderecoWeb = objList.Valor("EnderecoWeb");
+					listVendedores.Add(seller);
+					objList.Seguinte();
+				}
+				return listVendedores;
+			}
+			else
+				return null;
+		}
+
 		/**
 		 * Get orders from client <cliente> between dates from & to (yyyy-mm-dd)
 		 * to make date unspecified pass value "nd" for any of the dates

@@ -252,6 +252,7 @@
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\OrdersController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="Controllers\VendedoresController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -260,6 +261,7 @@
     <Compile Include="LibPrimavera\Model\Cliente.cs" />
     <Compile Include="LibPrimavera\Model\Order.cs" />
     <Compile Include="LibPrimavera\Model\RespostaErro.cs" />
+    <Compile Include="LibPrimavera\Model\Vendedores.cs" />
     <Compile Include="LibPrimavera\PriEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
