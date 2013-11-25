@@ -13,61 +13,14 @@ namespace FirstREST.Lib_Primavera.Model
 			set;
 		}
 
-		public string Morada
+		public string Email
 		{
 			get;
 			set;
 		}
 
-		public string Local
-		{
-			get;
-			set;
-		}
 
 		public string Tel
-		{
-			get;
-			set;
-		}
-
-		public string PrazoEntrega
-		{
-			get;
-			set;
-		}
-
-		public string NumContrib
-		{
-			get;
-			set;
-		}
-
-		public DateTime DataUltAct
-		{
-			get;
-			set;
-		}
-
-		public double EncomendasPendentes
-		{
-			get;
-			set;
-		}
-
-		public string Descricao
-		{
-			get;
-			set;
-		}
-
-		public string Fax
-		{
-			get;
-			set;
-		}
-
-		public string EnderecoWeb
 		{
 			get;
 			set;

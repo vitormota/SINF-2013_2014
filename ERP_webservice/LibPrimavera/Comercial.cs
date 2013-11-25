@@ -102,28 +102,21 @@ namespace FirstREST.Lib_Primavera
 			ErpBS objMotor = new ErpBS();
 			//MotorPrimavera mp = new MotorPrimavera();
 			StdBELista objList;
+			
 			Model.Vendedores seller = new Model.Vendedores();
 			List<Model.Vendedores> listVendedores = new List<Model.Vendedores>();
 			if (PriEngine.Platform.Inicializada)
 			{
 
 				//if (PriEngine.InitializeCompany("BELAFLOR", "admin", "admin") == true){
-				String query = "SELECT * FROM PRIBELAFLOR.dbo.Fornecedores";
+				String query = "SELECT * FROM PRIEMPRE.dbo.Utilizadores WHERE PerfilSugerido = 'Comercial I' AND activo = '1' ";
 				objList = PriEngine.Engine.Consulta(query);
 				while (!objList.NoFim())
 				{
 					seller = new Model.Vendedores();
 					seller.Nome = objList.Valor("Nome");
-					seller.Morada = objList.Valor("Morada");
-					seller.Local = objList.Valor("Local");
-					seller.Tel = objList.Valor("Tel");
-					seller.PrazoEntrega = objList.Valor("PrazoEnt");
-					seller.NumContrib = objList.Valor("NumContrib");
-					seller.DataUltAct = objList.Valor("DataUltimaActualizacao");
-					seller.EncomendasPendentes = objList.Valor("EncomendasPendentes");
-					seller.Descricao = objList.Valor("Descricao");
-					seller.Fax = objList.Valor("Fax");
-					seller.EnderecoWeb = objList.Valor("EnderecoWeb");
+					seller.Email = objList.Valor("Email");
+					seller.Tel = objList.Valor("Telemovel");
 					listVendedores.Add(seller);
 					objList.Seguinte();
 				}
