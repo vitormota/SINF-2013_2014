@@ -200,6 +200,8 @@ namespace FirstREST.Lib_Primavera
 				while (!objList.NoFim())
 				{
 					ord = new Model.Order();
+					ord.id = objList.Valor("Id");
+					ord.docNum = objList.Valor("NumDoc");
 					ord.CodClient = objList.Valor("Entidade");
 					ord.modPag = objList.Valor("ModoPag");
 					ord.numContrib = objList.Valor("NumContribuinte");
@@ -209,6 +211,8 @@ namespace FirstREST.Lib_Primavera
 					ord.date = objList.Valor("Data");
 					ord.condPag = getCondPagamentoById(objList.Valor("CondPag"));
 					ord.modExpedicao = getModExpedicaoById(objList.Valor("ModoExp"));
+					ord.estadoFact = invoiceState(ord.id, ord.docNum);
+					ord.expedido = shippingState(ord.docNum);
 					listOrders.Add(ord);
 					objList.Seguinte();
 				}
@@ -268,6 +272,8 @@ namespace FirstREST.Lib_Primavera
 				while (!objList.NoFim())
 				{
 					ord = new Model.Order();
+					ord.id = objList.Valor("Id");
+					ord.docNum = objList.Valor("NumDoc");
 					ord.CodClient = objList.Valor("Entidade");
 					ord.modPag = objList.Valor("ModoPag");
 					ord.numContrib = objList.Valor("NumContribuinte");
@@ -277,6 +283,8 @@ namespace FirstREST.Lib_Primavera
 					ord.date = objList.Valor("Data");
 					ord.condPag = getCondPagamentoById(objList.Valor("CondPag"));
 					ord.modExpedicao = getModExpedicaoById(objList.Valor("ModoExp"));
+					ord.estadoFact = invoiceState(ord.id, ord.docNum);
+					ord.expedido = shippingState(ord.docNum);
 					listOrders.Add(ord);
 					objList.Seguinte();
 				}
