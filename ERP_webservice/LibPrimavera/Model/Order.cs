@@ -10,6 +10,11 @@ namespace FirstREST.Lib_Primavera.Model
 
 		public string modExpedicao { get; set; }
 
+
+		public string id { get; set; }
+
+		public int docNum { get; set; }
+
 		public string CodClient
 		{
 			get;
@@ -60,5 +65,8 @@ namespace FirstREST.Lib_Primavera.Model
 			get;
 			set;
 		}
+
+		public string estadoFact { get; set; }
+		public string expedido { get; set; }
 	}
 }

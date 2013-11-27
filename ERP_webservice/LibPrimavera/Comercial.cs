@@ -22,13 +22,14 @@ namespace FirstREST.Lib_Primavera
 			List<Model.Order> listOrders = new List<Model.Order>();
 			if (PriEngine.Platform.Inicializada)
 			{
-
 				//if (PriEngine.InitializeCompany("BELAFLOR", "admin", "admin") == true){
-				String query = "SELECT * FROM PRIBELAFLOR.dbo.CabecDoc";
+				String query = "SELECT * FROM PRIBELAFLOR.dbo.CabecDoc WHERE TipoDoc='ECL'";
 				objList = PriEngine.Engine.Consulta(query);
 				while (!objList.NoFim())
 				{
 					ord = new Model.Order();
+					ord.id = objList.Valor("Id");
+					ord.docNum = objList.Valor("NumDoc");
 					ord.CodClient = objList.Valor("Entidade");
 					ord.modPag = objList.Valor("ModoPag");
 					ord.numContrib = objList.Valor("NumContribuinte");
@@ -38,6 +39,8 @@ namespace FirstREST.Lib_Primavera
 					ord.date = objList.Valor("Data");
 					ord.condPag = getCondPagamentoById(objList.Valor("CondPag"));
 					ord.modExpedicao = getModExpedicaoById(objList.Valor("ModoExp"));
+					ord.estadoFact = invoiceState(ord.id,ord.docNum);
+					ord.expedido = shippingState(ord.docNum);
 					listOrders.Add(ord);
 					objList.Seguinte();
 				}
@@ -47,7 +50,124 @@ namespace FirstREST.Lib_Primavera
 				return null;
 		}
 
-		private static string getCondPagamentoById(string id) {
+		private static string shippingState(int docNum)
+		{
+			string state = null;
+			StdBELista objList;
+			if (PriEngine.Platform.Inicializada)
+			{
+				string ids = getCabecDocIds(docNum);
+				string[] id_arr = ids.Split(',');
+				string where = "(";
+				for (int i = 0; i < id_arr.Length; i++)
+				{
+					if (i > 0) where += " or ";
+					where += "Id='" + id_arr[i] + "'";
+				}
+
+				where += ")";
+				if (where.Length == 7)
+				{
+					state = "Pendente";
+				}
+				else
+				{
+					string query = "SELECT * FROM PRIBELAFLOR.dbo.CabecDoc where " + where + " and TipoDoc='GT'";
+					objList = PriEngine.Engine.Consulta(query);
+					if (objList.NumLinhas() >= 1)
+					{
+						state = "Expedido";
+					}
+					else
+					{
+						state = "Pendente";
+					}
+				}
+				
+			}
+			return state;
+		}
+
+		/**
+		 * return invoice state: [fully paid; partially paid : x/total]
+		 * 
+		 * */
+		private static string invoiceState(string id,int numdoc)
+		{
+			string state = null;
+			double sum = 0.0,total;
+			StdBELista objList;
+			if (PriEngine.Platform.Inicializada)
+			{
+				String query = "SELECT Estado FROM PRIBELAFLOR.dbo.CabecDocStatus WHERE IdCabecDoc='" + id.Replace("{", "").Replace("}", "") + "'";
+				objList = PriEngine.Engine.Consulta(query);
+				if (false)//String.Compare(objList.Valor("Estado"), "T")==0)
+				{
+					//invoice fully paid for ecl: id 
+					state="Pago";
+				}
+				else
+				{
+					string ids = getCabecDocIds(numdoc);
+					string[] id_arr = ids.Split(',');
+					string where = "(";
+					for (int i = 0; i < id_arr.Length; i++)
+					{
+						if (i > 0) where += " or ";
+						where += "Id='" + id_arr[i] + "'";
+					}
+
+					where += ")";
+					if (where.Length == 7) state = "Pendente";
+					else
+					{
+						query = "SELECT * FROM PRIBELAFLOR.dbo.CabecDoc where " + where +" and TipoDoc='FA'";
+						objList = PriEngine.Engine.Consulta(query);
+						while (!objList.NoFim()) {
+							sum += objList.Valor("TotalMerc");
+							objList.Seguinte();
+						}
+						total = getEclTotalMerc(numdoc);
+						if (sum == getEclTotalMerc(numdoc))
+						{
+							//means fully paid, if this happens it will invalidate first if clause
+							state = "Pago (totalmente).";
+						}
+						else
+						{
+							state = "Parcial (" + sum + "/" + total + ")";
+						}
+					}
+					
+				}
+			}
+			return state;
+		}
+
+		public static double getEclTotalMerc(int numDoc) {
+			String query = "SELECT TotalMerc FROM PRIBELAFLOR.dbo.CabecDoc WHERE TipoDoc='ECL' and NumDoc=" + numDoc;
+			StdBELista objlist = PriEngine.Engine.Consulta(query);
+			return objlist.Valor("TotalMerc");
+		}
+
+		public static string getCabecDocIds(int eclId)
+		{
+			string res = "";
+			int i = 0;
+			string query = "SELECT IdCabecDoc FROM PRIBELAFLOR.dbo.LinhasDoc where Descricao like 'ECL Nº" + eclId + "%'";
+			StdBELista objList = PriEngine.Engine.Consulta(query);
+			while (!objList.NoFim())
+			{
+				if (i > 0) res += ",";
+				i++;
+				res += objList.Valor("IdCabecDoc");
+				objList.Seguinte();
+			}
+			return res.Replace("{","").Replace("}","");
+		}
+
+		private static string getCondPagamentoById(string id)
+		{
 			//workaround
 			if (id.Length == 1) id = "0" + id;
 			//----------
@@ -56,9 +176,10 @@ namespace FirstREST.Lib_Primavera
 			return objList.Valor("Descricao");
 		}
 
-		private static string getModExpedicaoById(string id) {
+		private static string getModExpedicaoById(string id)
+		{
 			if (id == "") return "Nao definido.";
-			string query = "select descricao from PRIBELAFLOR.dbo.ModosExp where ModoExp='"+id+"'";
+			string query = "select descricao from PRIBELAFLOR.dbo.ModosExp where ModoExp='" + id + "'";
 			StdBELista objList = PriEngine.Engine.Consulta(query);
 			return objList.Valor("Descricao");
 		}
@@ -74,7 +195,7 @@ namespace FirstREST.Lib_Primavera
 			{
 
 				//if (PriEngine.InitializeCompany("BELAFLOR", "admin", "admin") == true){
-				String query = "SELECT * FROM PRIBELAFLOR.dbo.CabecDoc where entidade='"+cliente+"'";
+				String query = "SELECT * FROM PRIBELAFLOR.dbo.CabecDoc where entidade='" + cliente + "'";
 				objList = PriEngine.Engine.Consulta(query);
 				while (!objList.NoFim())
 				{
@@ -141,8 +262,8 @@ namespace FirstREST.Lib_Primavera
 		public static List<Model.Order> OrdersList(string cliente, string from, string to)
 		{
 			string query = "SELECT * FROM PRIBELAFLOR.dbo.CabecDoc where entidade='" + cliente + "'";
-			if(from != "nd") query += " and Data>='"+from+"'";
-			if(to != "nd") query += " and Data<='"+to+"'";
+			if (from != "nd") query += " and Data>='" + from + "'";
+			if (to != "nd") query += " and Data<='" + to + "'";
 
 			ErpBS objMotor = new ErpBS();
 			StdBELista objList;
@@ -180,9 +301,10 @@ namespace FirstREST.Lib_Primavera
 			StdBELista objList;
 			Model.Cliente cli = new Model.Cliente();
 			List<Model.Cliente> listClientes = new List<Model.Cliente>();
-			if(PriEngine.Platform.Inicializada){
+			if (PriEngine.Platform.Inicializada)
+			{
 
-			//if (PriEngine.InitializeCompany("BELAFLOR", "admin", "admin") == true){
+				//if (PriEngine.InitializeCompany("BELAFLOR", "admin", "admin") == true){
 				//objList = PriEngine.Engine.Comercial.Clientes.LstClientes();
 				String query = "SELECT * FROM PRIBELAFLOR.dbo.Clientes";
 				objList = PriEngine.Engine.Consulta(query);
