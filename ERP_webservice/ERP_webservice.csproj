@@ -259,6 +259,7 @@
     <Compile Include="LibPrimavera\Comercial.cs" />
     <Compile Include="LibPrimavera\Model\Artigo.cs" />
     <Compile Include="LibPrimavera\Model\Cliente.cs" />
+    <Compile Include="LibPrimavera\Model\Admin.cs" />
     <Compile Include="LibPrimavera\Model\Order.cs" />
     <Compile Include="LibPrimavera\Model\RespostaErro.cs" />
     <Compile Include="LibPrimavera\Model\Vendedores.cs" />
