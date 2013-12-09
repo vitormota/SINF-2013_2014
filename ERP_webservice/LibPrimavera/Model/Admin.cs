@@ -17,16 +17,6 @@ namespace FirstREST.Lib_Primavera.Model
             get;
             set;
         }
-        public string NumContribuinte
-        {
-            get;
-            set;
-        }
-        public string Moeda
-        {
-            get;
-            set;
-        }
     }
 
 }

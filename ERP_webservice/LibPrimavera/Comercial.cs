@@ -524,5 +524,56 @@ namespace FirstREST.Lib_Primavera
 				return null;
 			}
 		}
-	}
+        // ? preciso rever isto
+        public static Lib_Primavera.Model.Admin GetAdmin(string codAdmin)
+        {
+            /*ErpBS objMotor = new ErpBS();
+            GcpBEAdmin objAdm = new GcpBEAdmin(); // erro aqui
+            Model.Admin myAdm = new Model.Admin();
+            if (PriEngine.InitializeCompany("BELAFLOR", "", "") == true)
+            {
+                if (PriEngine.Engine.Comercial.Admins.Existe(codAdmin) == true) // erro aqui
+                {
+                    objAdm = PriEngine.Engine.Comercial.Admins.Edita(codAdmin); // erro aqui
+                    myAdm.CodAdmin = objAdm.get_Cliente();
+                    myAdm.NomeAdmin = objAdm.get_Nome();
+                    myAdm.Moeda = objAdm.get_Moeda();
+                    myAdm.NumContribuinte = objAdm.get_NumContribuinte();
+                    return myAdm;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else*/
+                return null;
+        }
+        public static List<Model.Admin> AdminsList()
+        {
+            ErpBS objMotor = new ErpBS();
+            //MotorPrimavera mp = new MotorPrimavera();
+            StdBELista objList;
+
+            Model.Admin adm = new Model.Admin();
+            List<Model.Admin> listAdmins = new List<Model.Admin>();
+            if (PriEngine.Platform.Inicializada)
+            {
+
+                //if (PriEngine.InitializeCompany("BELAFLOR", "admin", "admin") == true){
+                String query = "SELECT * FROM PRIEMPRE.dbo.Utilizadores WHERE PerfilSugerido = 'Administrador' AND activo = '1' "; //? verificar
+                objList = PriEngine.Engine.Consulta(query);
+                while (!objList.NoFim())
+                {
+                    adm = new Model.Admin();
+                    adm.NomeAdmin = objList.Valor("Nome");
+                    listAdmins.Add(adm);
+                    objList.Seguinte();
+                }
+                return listAdmins;
+            }
+            else
+                return null;
+        }
+    }
 }
