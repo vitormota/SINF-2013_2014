@@ -324,6 +324,47 @@ namespace FirstREST.Lib_Primavera
 			else
 				return null;
 		}
+
+
+		// Clientes
+		public static List<Model.Utilizador> ListaUtilizadores()
+		{
+			ErpBS objMotor = new ErpBS();
+			//MotorPrimavera mp = new MotorPrimavera();
+			StdBELista objList;
+			Model.Utilizador cli = new Model.Utilizador();
+			List<Model.Utilizador> listClientes = new List<Model.Utilizador>();
+			if (PriEngine.Platform.Inicializada)
+			{
+				//if (PriEngine.InitializeCompany("BELAFLOR", "admin", "admin") == true){
+				//objList = PriEngine.Engine.Comercial.Clientes.LstClientes();
+				String query = "SELECT * FROM PRIBELAFLOR.dbo.Clientes";
+				objList = PriEngine.Engine.Consulta(query);
+				while (!objList.NoFim())
+				{
+					cli = new Model.Utilizador();
+					cli.Cod = objList.Valor("Cliente");
+					cli.Tipo = 3;
+					cli.Nome = objList.Valor("Nome");
+					cli.Morada = objList.Valor("Fac_Mor");
+					cli.Localidade = objList.Valor("Fac_Local");
+					cli.CP = objList.Valor("Fac_Cp");
+					cli.CPLocal = objList.Valor("Fac_Cploc");
+					cli.Telefone = objList.Valor("Fac_Tel");
+					cli.Fax = objList.Valor("Fac_Fax");
+					cli.Pais = objList.Valor("Pais");
+					cli.Idioma = objList.Valor("Idioma");
+					cli.Moeda = objList.Valor("Moeda");
+					cli.NumContribuinte = objList.Valor("NumContrib");
+					listClientes.Add(cli);
+					objList.Seguinte();
+				}
+				return listClientes;
+			}
+			else
+				return null;
+		}
+
 		public static Lib_Primavera.Model.Cliente GetCliente(string codCliente)
 		{
 			ErpBS objMotor = new ErpBS();
@@ -348,7 +389,70 @@ namespace FirstREST.Lib_Primavera
 			else
 				return null;
 		}
-		public static Lib_Primavera.Model.RespostaErro UpdCliente(Lib_Primavera.Model.Cliente cliente)
+
+
+		public static Lib_Primavera.Model.Utilizador GetClienteUser(string codCliente)
+        {
+            ErpBS objMotor = new ErpBS();
+            StdBELista objCli;
+            Model.Utilizador mycli = new Model.Utilizador();
+            if (PriEngine.InitializeCompany("BELAFLOR", "admin", "admin") == true)
+            {
+                //if (PriEngine.InitializeCompany("BELAFLOR", "admin", "admin") == true){
+                String query = "SELECT * FROM PRIBELAFLOR.dbo.Clientes where Cliente = '" + codCliente + "'";
+                objCli = PriEngine.Engine.Consulta(query);
+                if(objCli.NumLinhas() > 0)
+                {
+                    mycli.Cod = objCli.Valor("Cliente");
+                    mycli.Tipo = 3;
+                    mycli.Nome = objCli.Valor("Nome");
+                    mycli.Morada = objCli.Valor("Fac_Mor");
+                    mycli.Localidade = objCli.Valor("Fac_Local");
+                    mycli.CP = objCli.Valor("Fac_Cp");
+                    mycli.CPLocal = objCli.Valor("Fac_Cploc");
+                    mycli.Telefone = objCli.Valor("Fac_Tel");
+                    mycli.Fax = objCli.Valor("Fac_Fax");
+                    mycli.Pais = objCli.Valor("Pais");
+                    mycli.Idioma = objCli.Valor("Idioma");
+                    mycli.Moeda = objCli.Valor("Moeda");
+                    mycli.NumContribuinte = objCli.Valor("NumContrib");
+                    return mycli;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+                return null;
+        }
+
+
+		//public static Lib_Primavera.Model.Cliente GetCliente(string codCliente)
+		//{
+		//	ErpBS objMotor = new ErpBS();
+		//	GcpBECliente objCli = new GcpBECliente();
+		//	Model.Cliente myCli = new Model.Cliente();
+		//	if (PriEngine.InitializeCompany("BELAFLOR", "", "") == true)
+		//	{
+		//		if (PriEngine.Engine.Comercial.Clientes.Existe(codCliente) == true)
+		//		{
+		//			objCli = PriEngine.Engine.Comercial.Clientes.Edita(codCliente);
+		//			myCli.CodCliente = objCli.get_Cliente();
+		//			myCli.NomeCliente = objCli.get_Nome();
+		//			myCli.Moeda = objCli.get_Moeda();
+		//			myCli.NumContribuinte = objCli.get_NumContribuinte();
+		//			return myCli;
+		//		}
+		//		else
+		//		{
+		//			return null;
+		//		}
+		//	}
+		//	else
+		//		return null;
+		//}
+		public static Lib_Primavera.Model.RespostaErro UpdCliente(Lib_Primavera.Model.Utilizador cliente)
 		{
 			Lib_Primavera.Model.RespostaErro erro = new Model.RespostaErro();
 			ErpBS objMotor = new ErpBS();
@@ -357,7 +461,7 @@ namespace FirstREST.Lib_Primavera
 			{
 				if (PriEngine.InitializeCompany("BELAFLOR", "", "") == true)
 				{
-					if (PriEngine.Engine.Comercial.Clientes.Existe(cliente.CodCliente) == false)
+					if (PriEngine.Engine.Comercial.Clientes.Existe(cliente.Cod) == false)
 					{
 						erro.Erro = 1;
 						erro.Descricao = "O cliente não existe";
@@ -365,11 +469,19 @@ namespace FirstREST.Lib_Primavera
 					}
 					else
 					{
-						objCli = PriEngine.Engine.Comercial.Clientes.Edita(cliente.CodCliente);
+						objCli = PriEngine.Engine.Comercial.Clientes.Edita(cliente.Cod);
 						objCli.set_EmModoEdicao(true);
-						objCli.set_Nome(cliente.NomeCliente);
-						objCli.set_NumContribuinte(cliente.NumContribuinte);
+						objCli.set_Nome(cliente.Nome);
+						objCli.set_Morada(cliente.Morada);
+						objCli.set_Localidade(cliente.Localidade);
+						objCli.set_CodigoPostal(cliente.CP);
+						objCli.set_LocalidadeCodigoPostal(cliente.CPLocal);
+						objCli.set_Telefone(cliente.Telefone);
+						objCli.set_Fax(cliente.Fax);
+						objCli.set_Pais(cliente.Pais);
+						objCli.set_Idioma(cliente.Idioma);
 						objCli.set_Moeda(cliente.Moeda);
+						objCli.set_NumContribuinte(cliente.NumContribuinte);
 						PriEngine.Engine.Comercial.Clientes.Actualiza(objCli);
 						erro.Erro = 0;
 						erro.Descricao = "Sucesso";
@@ -390,6 +502,7 @@ namespace FirstREST.Lib_Primavera
 				return erro;
 			}
 		}
+
 		public static Lib_Primavera.Model.RespostaErro DelCliente(string codCliente)
 		{
 			Lib_Primavera.Model.RespostaErro erro = new Model.RespostaErro();
@@ -416,39 +529,6 @@ namespace FirstREST.Lib_Primavera
 				{
 					erro.Erro = 1;
 					erro.Descricao = "Erro ao abrir a empresa";
-					return erro;
-				}
-			}
-			catch (Exception ex)
-			{
-				erro.Erro = 1;
-				erro.Descricao = ex.Message;
-				return erro;
-			}
-		}
-		public static Lib_Primavera.Model.RespostaErro InsereClienteObj(Model.Cliente cli)
-		{
-			Lib_Primavera.Model.RespostaErro erro = new Model.RespostaErro();
-			//ErpBS objMotor = new ErpBS();
-			//MotorPrimavera mp = new MotorPrimavera();
-			GcpBECliente myCli = new GcpBECliente();
-			try
-			{
-				if (PriEngine.InitializeCompany("BELAFLOR", "", "") == true)
-				{
-					myCli.set_Cliente(cli.CodCliente);
-					myCli.set_Nome(cli.NomeCliente);
-					myCli.set_NumContribuinte(cli.NumContribuinte);
-					myCli.set_Moeda(cli.Moeda);
-					PriEngine.Engine.Comercial.Clientes.Actualiza(myCli);
-					erro.Erro = 0;
-					erro.Descricao = "Sucesso";
-					return erro;
-				}
-				else
-				{
-					erro.Erro = 1;
-					erro.Descricao = "Erro ao abrir empresa";
 					return erro;
 				}
 			}
@@ -499,6 +579,31 @@ namespace FirstREST.Lib_Primavera
 				return null;
 			}
 		}
+
+// Administradores
+        public static Lib_Primavera.Model.Utilizador GetAdmin(string codAdmin)
+        {
+            ErpBS objMotor = new ErpBS();
+            StdBELista objAdm;
+            Model.Utilizador myAdm = new Model.Utilizador();
+            String query = "SELECT * FROM PRIEMPRE.dbo.Utilizadores WHERE Administrador = '1' AND activo = '1' AND Codigo = '" + codAdmin + "'";
+            objAdm = PriEngine.Engine.Consulta(query);
+            if (PriEngine.Platform.Inicializada)
+            {
+                myAdm.Cod = objAdm.Valor("Codigo");
+                myAdm.Tipo = 1;
+                myAdm.Nome = objAdm.Valor("Nome");
+                myAdm.Email = objAdm.Valor("Email");
+                myAdm.Telefone = objAdm.Valor("Telemovel");
+                myAdm.Idioma = objAdm.Valor("Idioma");
+                return myAdm;
+
+            }
+            else
+                return null;
+        }
+
+// Artigos
 		public static List<Model.Artigo> ListaArtigos()
 		{
 			ErpBS objMotor = new ErpBS();
@@ -524,31 +629,57 @@ namespace FirstREST.Lib_Primavera
 				return null;
 			}
 		}
-        // ? preciso rever isto
-        public static Lib_Primavera.Model.Admin GetAdmin(string codAdmin)
-        {
-            /*ErpBS objMotor = new ErpBS();
-            GcpBEAdmin objAdm = new GcpBEAdmin(); // erro aqui
-            Model.Admin myAdm = new Model.Admin();
-            if (PriEngine.InitializeCompany("BELAFLOR", "", "") == true)
-            {
-                if (PriEngine.Engine.Comercial.Admins.Existe(codAdmin) == true) // erro aqui
-                {
-                    objAdm = PriEngine.Engine.Comercial.Admins.Edita(codAdmin); // erro aqui
-                    myAdm.CodAdmin = objAdm.get_Cliente();
-                    myAdm.NomeAdmin = objAdm.get_Nome();
-                    myAdm.Moeda = objAdm.get_Moeda();
-                    myAdm.NumContribuinte = objAdm.get_NumContribuinte();
-                    return myAdm;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            else*/
-                return null;
-        }
+		//// ? preciso rever isto
+		//public static Lib_Primavera.Model.Admin GetAdmin(string codAdmin)
+		//{
+		//	/*ErpBS objMotor = new ErpBS();
+		//	GcpBEAdmin objAdm = new GcpBEAdmin(); // erro aqui
+		//	Model.Admin myAdm = new Model.Admin();
+		//	if (PriEngine.InitializeCompany("BELAFLOR", "", "") == true)
+		//	{
+		//		if (PriEngine.Engine.Comercial.Admins.Existe(codAdmin) == true) // erro aqui
+		//		{
+		//			objAdm = PriEngine.Engine.Comercial.Admins.Edita(codAdmin); // erro aqui
+		//			myAdm.CodAdmin = objAdm.get_Cliente();
+		//			myAdm.NomeAdmin = objAdm.get_Nome();
+		//			myAdm.Moeda = objAdm.get_Moeda();
+		//			myAdm.NumContribuinte = objAdm.get_NumContribuinte();
+		//			return myAdm;
+		//		}
+		//		else
+		//		{
+		//			return null;
+		//		}
+		//	}
+		//	else*/
+		//		return null;
+		//}
+
+		//public static Lib_Primavera.Model.Artigo GetArtigo(string codArtigo)
+		//{
+		//	// ErpBS objMotor = new ErpBS();
+		//	GcpBEArtigo objArtigo = new GcpBEArtigo();
+		//	Model.Artigo myArt = new Model.Artigo();
+		//	if (PriEngine.InitializeCompany("BELAFLOR", "", "") == true)
+		//	{
+		//		if (PriEngine.Engine.Comercial.Artigos.Existe(codArtigo) == false)
+		//		{
+		//			return null;
+		//		}
+		//		else
+		//		{
+		//			objArtigo = PriEngine.Engine.Comercial.Artigos.Edita(codArtigo);
+		//			myArt.CodArtigo = objArtigo.get_Artigo();
+		//			myArt.DescArtigo = objArtigo.get_Descricao();
+		//			return myArt;
+		//		}
+		//	}
+		//	else
+		//	{
+		//		return null;
+		//	}
+		//}
+
         public static List<Model.Admin> AdminsList()
         {
             ErpBS objMotor = new ErpBS();

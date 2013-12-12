@@ -16,9 +16,9 @@ namespace FirstREST.Controllers
             return Lib_Primavera.Comercial.AdminsList();
         }
 		// GET return admin for profile 
-		public Admin Get(string id)
+		public Utilizador Get(string id)
 		{
-			Lib_Primavera.Model.Admin adm = Lib_Primavera.Comercial.GetAdmin(id);
+			Lib_Primavera.Model.Utilizador adm = Lib_Primavera.Comercial.GetAdmin(id);
 			if (adm == null)
 			{
 				throw new HttpResponseException(
