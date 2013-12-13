@@ -10,6 +10,7 @@ namespace FirstREST.Lib_Primavera.Model
 
 		public string modExpedicao { get; set; }
 
+		public string responsable { get; set; }
 
 		public string id { get; set; }
 

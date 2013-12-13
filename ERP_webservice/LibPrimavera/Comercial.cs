@@ -33,6 +33,7 @@ namespace FirstREST.Lib_Primavera
 				{
 					ord = new Model.Order();
 					ord.id = objList.Valor("Id");
+					ord.responsable = objList.Valor("Utilizador");
 					ord.docNum = objList.Valor("NumDoc");
 					ord.CodClient = objList.Valor("Entidade");
 					ord.modPag = objList.Valor("ModoPag");
@@ -241,6 +242,7 @@ namespace FirstREST.Lib_Primavera
 				{
 					ord = new Model.Order();
 					ord.id = objList.Valor("Id");
+					ord.responsable = objList.Valor("Utilizador");
 					ord.docNum = objList.Valor("NumDoc");
 					ord.CodClient = objList.Valor("Entidade");
 					ord.modPag = objList.Valor("ModoPag");
@@ -335,6 +337,7 @@ namespace FirstREST.Lib_Primavera
 				{
 					ord = new Model.Order();
 					ord.id = objList.Valor("Id");
+					ord.responsable = objList.Valor("Utilizador");
 					ord.docNum = objList.Valor("NumDoc");
 					ord.CodClient = objList.Valor("Entidade");
 					ord.modPag = objList.Valor("ModoPag");
