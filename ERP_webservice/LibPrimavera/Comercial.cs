@@ -15,15 +15,19 @@ namespace FirstREST.Lib_Primavera
 
 		public static List<Model.Order> OrdersList()
 		{
+			String state_date;
 			ErpBS objMotor = new ErpBS();
 			//MotorPrimavera mp = new MotorPrimavera();
 			StdBELista objList;
+			StdBELista objdate;
 			Model.Order ord = new Model.Order();
 			List<Model.Order> listOrders = new List<Model.Order>();
 			if (PriEngine.Platform.Inicializada)
 			{
 				//if (PriEngine.InitializeCompany("BELAFLOR", "admin", "admin") == true){
 				String query = "SELECT * FROM PRIBELAFLOR.dbo.CabecDoc WHERE TipoDoc='ECL'";
+				String date_query = "SELECT CURRENT_TIMESTAMP as date";
+				objdate = PriEngine.Engine.Consulta(date_query);
 				objList = PriEngine.Engine.Consulta(query);
 				while (!objList.NoFim())
 				{
@@ -39,8 +43,26 @@ namespace FirstREST.Lib_Primavera
 					ord.date = objList.Valor("Data");
 					ord.condPag = getCondPagamentoById(objList.Valor("CondPag"));
 					ord.modExpedicao = getModExpedicaoById(objList.Valor("ModoExp"));
-					ord.estadoFact = invoiceState(ord.id,ord.docNum);
+					state_date = invoiceStateAndDate(ord.id, ord.docNum);
+					ord.estadoFact = state_date.Split('|')[0];
 					ord.expedido = shippingState(ord.docNum);
+					if (String.Compare(ord.expedido, "Expedido") == 0 && String.Compare(ord.estadoFact,"Pago (totalmente)")==0)
+					{
+						//means this order is finalized
+						ord.lastUpdated = "Completa";
+					}
+					else
+					{
+						//calculate date diff
+						if (String.Compare(ord.estadoFact, "Pendente") == 0)
+						{
+							ord.lastUpdated = dateDiff(ord.date.ToString(),ord.date.ToString()).ToString();
+						}
+						else
+						{
+							ord.lastUpdated = dateDiff(state_date.Split('|')[1],ord.date.ToString()).ToString();
+						}
+					}
 					listOrders.Add(ord);
 					objList.Seguinte();
 				}
@@ -48,6 +70,18 @@ namespace FirstREST.Lib_Primavera
 			}
 			else
 				return null;
+		}
+
+		private static int dateDiff(String d1,String eclDate)
+		{
+			if (d1.Length == 0)
+			{
+				d1 = eclDate;
+			}
+			StdBELista obj = PriEngine.Engine.Consulta("DECLARE @startdate datetime2 = CURRENT_TIMESTAMP;"+
+				"DECLARE @endDate datetime2 = convert(datetime, '"+d1+"', 103);"+
+				"SELECT DATEDIFF(day,@endDate , @startdate) AS DiffDate");
+			return obj.Valor("DiffDate");
 		}
 
 		private static string shippingState(int docNum)
@@ -92,9 +126,10 @@ namespace FirstREST.Lib_Primavera
 		 * return invoice state: [fully paid; partially paid : x/total]
 		 * 
 		 * */
-		private static string invoiceState(string id,int numdoc)
+		private static string invoiceStateAndDate(string id,int numdoc)
 		{
 			string state = null;
+			string date = null;
 			double sum = 0.0,total;
 			StdBELista objList;
 			if (PriEngine.Platform.Inicializada)
@@ -121,21 +156,22 @@ namespace FirstREST.Lib_Primavera
 					if (where.Length == 7) state = "Pendente";
 					else
 					{
-						query = "SELECT * FROM PRIBELAFLOR.dbo.CabecDoc where " + where +" and TipoDoc='FA'";
+						query = "SELECT Data,TotalMerc FROM PRIBELAFLOR.dbo.CabecDoc where " + where +" and TipoDoc='FA'";
 						objList = PriEngine.Engine.Consulta(query);
 						while (!objList.NoFim()) {
 							sum += objList.Valor("TotalMerc");
+							date = ((DateTime) objList.Valor("Data")).ToString();
 							objList.Seguinte();
 						}
 						total = getEclTotalMerc(numdoc);
 						if (sum == getEclTotalMerc(numdoc))
 						{
 							//means fully paid, if this happens it will invalidate first if clause
-							state = "Pago (totalmente).";
+							state = "Pago (totalmente)|"+date;
 						}
 						else
 						{
-							state = "Parcial (" + sum + "/" + total + ")";
+							state = "Parcial (" + sum + "/" + total + ")|"+date;
 						}
 					}
 					
@@ -154,7 +190,7 @@ namespace FirstREST.Lib_Primavera
 		{
 			string res = "";
 			int i = 0;
-			string query = "SELECT IdCabecDoc FROM PRIBELAFLOR.dbo.LinhasDoc where Descricao like 'ECL Nº" + eclId + "%'";
+			string query = "SELECT IdCabecDoc FROM PRIBELAFLOR.dbo.LinhasDoc where Descricao like 'ECL Nº" + eclId + "/%'";
 			StdBELista objList = PriEngine.Engine.Consulta(query);
 			while (!objList.NoFim())
 			{
@@ -186,6 +222,8 @@ namespace FirstREST.Lib_Primavera
 
 		public static List<Model.Order> OrdersList(string cliente)
 		{
+			String state_date;
+			StdBELista objdate;
 			ErpBS objMotor = new ErpBS();
 			//MotorPrimavera mp = new MotorPrimavera();
 			StdBELista objList;
@@ -195,7 +233,9 @@ namespace FirstREST.Lib_Primavera
 			{
 
 				//if (PriEngine.InitializeCompany("BELAFLOR", "admin", "admin") == true){
-				String query = "SELECT * FROM PRIBELAFLOR.dbo.CabecDoc where entidade='" + cliente + "'";
+				String query = "SELECT * FROM PRIBELAFLOR.dbo.CabecDoc where entidade='" + cliente + "' and TipoDoc='ECL'";
+				String date_query = "SELECT CURRENT_TIMESTAMP as date";
+				objdate = PriEngine.Engine.Consulta(date_query);
 				objList = PriEngine.Engine.Consulta(query);
 				while (!objList.NoFim())
 				{
@@ -211,8 +251,26 @@ namespace FirstREST.Lib_Primavera
 					ord.date = objList.Valor("Data");
 					ord.condPag = getCondPagamentoById(objList.Valor("CondPag"));
 					ord.modExpedicao = getModExpedicaoById(objList.Valor("ModoExp"));
-					ord.estadoFact = invoiceState(ord.id, ord.docNum);
+					state_date = invoiceStateAndDate(ord.id, ord.docNum);
+					ord.estadoFact = state_date.Split('|')[0];
 					ord.expedido = shippingState(ord.docNum);
+					if (String.Compare(ord.expedido, "Expedido") == 0 && String.Compare(ord.estadoFact, "Pago (totalmente)") == 0)
+					{
+						//means this order is finalized
+						ord.lastUpdated = "Completa";
+					}
+					else
+					{
+						//calculate date diff
+						if (String.Compare(ord.estadoFact, "Pendente") == 0)
+						{
+							ord.lastUpdated = dateDiff(ord.date.ToString(), ord.date.ToString()).ToString();
+						}
+						else
+						{
+							ord.lastUpdated = dateDiff(state_date.Split('|')[1], ord.date.ToString()).ToString();
+						}
+					}
 					listOrders.Add(ord);
 					objList.Seguinte();
 				}
@@ -258,7 +316,9 @@ namespace FirstREST.Lib_Primavera
 		 * */
 		public static List<Model.Order> OrdersList(string cliente, string from, string to)
 		{
-			string query = "SELECT * FROM PRIBELAFLOR.dbo.CabecDoc where entidade='" + cliente + "'";
+			String state_date;
+			StdBELista objdate;
+			string query = "SELECT * FROM PRIBELAFLOR.dbo.CabecDoc where entidade='" + cliente + "' and TipoDoc='ECL'";
 			if (from != "nd") query += " and Data>='" + from + "'";
 			if (to != "nd") query += " and Data<='" + to + "'";
 
@@ -268,6 +328,8 @@ namespace FirstREST.Lib_Primavera
 			List<Model.Order> listOrders = new List<Model.Order>();
 			if (PriEngine.Platform.Inicializada)
 			{
+				String date_query = "SELECT CURRENT_TIMESTAMP as date";
+				objdate = PriEngine.Engine.Consulta(date_query);
 				objList = PriEngine.Engine.Consulta(query);
 				while (!objList.NoFim())
 				{
@@ -283,8 +345,26 @@ namespace FirstREST.Lib_Primavera
 					ord.date = objList.Valor("Data");
 					ord.condPag = getCondPagamentoById(objList.Valor("CondPag"));
 					ord.modExpedicao = getModExpedicaoById(objList.Valor("ModoExp"));
-					ord.estadoFact = invoiceState(ord.id, ord.docNum);
+					state_date = invoiceStateAndDate(ord.id, ord.docNum);
+					ord.estadoFact = state_date.Split('|')[0];
 					ord.expedido = shippingState(ord.docNum);
+					if (String.Compare(ord.expedido, "Expedido") == 0 && String.Compare(ord.estadoFact, "Pago (totalmente)") == 0)
+					{
+						//means this order is finalized
+						ord.lastUpdated = "Completa";
+					}
+					else
+					{
+						//calculate date diff
+						if (String.Compare(ord.estadoFact, "Pendente") == 0)
+						{
+							ord.lastUpdated = dateDiff(ord.date.ToString(), ord.date.ToString()).ToString();
+						}
+						else
+						{
+							ord.lastUpdated = dateDiff(state_date.Split('|')[1], ord.date.ToString()).ToString();
+						}
+					}
 					listOrders.Add(ord);
 					objList.Seguinte();
 				}

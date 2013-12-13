@@ -13,6 +13,8 @@ namespace FirstREST.Lib_Primavera.Model
 
 		public string id { get; set; }
 
+		public string lastUpdated { get; set; }
+
 		public int docNum { get; set; }
 
 		public string CodClient
