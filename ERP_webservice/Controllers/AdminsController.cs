@@ -11,9 +11,9 @@ namespace FirstREST.Controllers
 {
 	public class AdminsController : ApiController
 	{
-        public IEnumerable<Lib_Primavera.Model.Admin> Get()
+        public IEnumerable<Lib_Primavera.Model.Utilizador> Get()
         {
-            return Lib_Primavera.Comercial.AdminsList();
+            return Lib_Primavera.Comercial.ListaAdmins();
         }
 		// GET return admin for profile 
 		public Utilizador Get(string id)
