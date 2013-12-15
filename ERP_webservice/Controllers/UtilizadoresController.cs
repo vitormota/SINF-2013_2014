@@ -11,7 +11,7 @@ namespace FirstREST.Controllers
 {
 	public class UtilizadoresController : ApiController
 	{
-        public IEnumerable<Lib_Primavera.Model.Utilizador> Get(string id)
+        public IEnumerable<Lib_Primavera.Model.Utilizador> Get(string id, string userId, string filter)
         {
             if (id == "clientes")
                 return listaClientes();
@@ -19,6 +19,10 @@ namespace FirstREST.Controllers
                 return listaVendedores();
             if (id == "admins")
                 return listaAdmins();
+            if (id == "seller" && filter == "yes")
+                return Lib_Primavera.Comercial.getClientsFromSeller(userId);
+            if (id == "client" && filter == "yes")
+                return Lib_Primavera.Comercial.getSellersFromClient(userId);
 
             return null;
         }

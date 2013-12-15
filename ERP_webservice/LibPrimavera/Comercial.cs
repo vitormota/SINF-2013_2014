@@ -282,6 +282,67 @@ namespace FirstREST.Lib_Primavera
                 return null;
         }
 
+        public static List<Model.Order> OrdersListVendor(string vendor)
+        {
+            String state_date;
+            StdBELista objdate;
+            ErpBS objMotor = new ErpBS();
+            //MotorPrimavera mp = new MotorPrimavera();
+            StdBELista objList;
+            Model.Order ord = new Model.Order();
+            List<Model.Order> listOrders = new List<Model.Order>();
+            if (PriEngine.Platform.Inicializada)
+            {
+
+                //if (PriEngine.InitializeCompany("BELAFLOR", "admin", "admin") == true){
+                String query = "SELECT * FROM PRIBELAFLOR.dbo.CabecDoc where utilizador='" + vendor + "' and TipoDoc='ECL'";
+                String date_query = "SELECT CURRENT_TIMESTAMP as date";
+                objdate = PriEngine.Engine.Consulta(date_query);
+                objList = PriEngine.Engine.Consulta(query);
+                while (!objList.NoFim())
+                {
+                    ord = new Model.Order();
+                    ord.id = objList.Valor("Id");
+                    ord.responsable = objList.Valor("Utilizador");
+                    ord.docNum = objList.Valor("NumDoc");
+                    ord.CodClient = objList.Valor("Entidade");
+                    ord.modPag = objList.Valor("ModoPag");
+                    ord.numContrib = objList.Valor("NumContribuinte");
+                    ord.totalMerc = objList.Valor("TotalMerc");
+                    ord.totalIva = objList.Valor("TotalIva");
+                    ord.moeda = objList.Valor("Moeda");
+                    ord.date = objList.Valor("Data");
+                    ord.condPag = getCondPagamentoById(objList.Valor("CondPag"));
+                    ord.modExpedicao = getModExpedicaoById(objList.Valor("ModoExp"));
+                    state_date = invoiceStateAndDate(ord.id, ord.docNum);
+                    ord.estadoFact = state_date.Split('|')[0];
+                    ord.expedido = shippingState(ord.docNum);
+                    if (String.Compare(ord.expedido, "Expedido") == 0 && String.Compare(ord.estadoFact, "Pago (totalmente)") == 0)
+                    {
+                        //means this order is finalized
+                        ord.lastUpdated = "Completa";
+                    }
+                    else
+                    {
+                        //calculate date diff
+                        if (String.Compare(ord.estadoFact, "Pendente") == 0)
+                        {
+                            ord.lastUpdated = dateDiff(ord.date.ToString(), ord.date.ToString()).ToString();
+                        }
+                        else
+                        {
+                            ord.lastUpdated = dateDiff(state_date.Split('|')[1], ord.date.ToString()).ToString();
+                        }
+                    }
+                    listOrders.Add(ord);
+                    objList.Seguinte();
+                }
+                return listOrders;
+            }
+            else
+                return null;
+        }
+
         public static List<Model.Utilizador> ListaVendedores()
         {
             ErpBS objMotor = new ErpBS();
@@ -705,6 +766,54 @@ namespace FirstREST.Lib_Primavera
                     objList.Seguinte();
                 }
                 return listAdmins;
+            }
+            else
+                return null;
+        }
+
+        public static IEnumerable<Model.Utilizador> getClientsFromSeller(string id)
+        {
+            StdBELista objList;
+            Model.Utilizador cli = new Model.Utilizador();
+            List<Model.Utilizador> listClientes = new List<Model.Utilizador>();
+            if (PriEngine.Platform.Inicializada)
+            {
+                //if (PriEngine.InitializeCompany("BELAFLOR", "admin", "admin") == true){
+                //objList = PriEngine.Engine.Comercial.Clientes.LstClientes();
+                String query = "SELECT Cliente from PRIBELAFLOR.dbo.Clientes where Cliente in (SELECT Entidade from PRIBELAFLOR.dbo.CabecDoc where Utilizador like '" + id + "')";
+                objList = PriEngine.Engine.Consulta(query);
+                while (!objList.NoFim())
+                {
+                    //cli = new Model.Utilizador();
+                    //cli = GetCliente(objList.Valor("Cliente"));
+                    listClientes.Add(GetCliente(objList.Valor("Cliente")));
+                    objList.Seguinte();
+                }
+                return listClientes;
+            }
+            else
+                return null;
+        }
+
+        public static IEnumerable<Model.Utilizador> getSellersFromClient(string id)
+        {
+            StdBELista objList;
+            Model.Utilizador cli = new Model.Utilizador();
+            List<Model.Utilizador> listSellers = new List<Model.Utilizador>();
+            if (PriEngine.Platform.Inicializada)
+            {
+                //if (PriEngine.InitializeCompany("BELAFLOR", "admin", "admin") == true){
+                //objList = PriEngine.Engine.Comercial.Clientes.LstClientes();
+                String query = "SELECT Codigo from PRIEMPRE.dbo.Utilizadores where Codigo in (SELECT Utilizador from PRIBELAFLOR.dbo.CabecDoc where Entidade like '" + id + "')";
+                objList = PriEngine.Engine.Consulta(query);
+                while (!objList.NoFim())
+                {
+                    //cli = new Model.Utilizador();
+                    //cli = GetCliente(objList.Valor("Cliente"));
+                    listSellers.Add(GetVendedor(objList.Valor("Codigo")));
+                    objList.Seguinte();
+                }
+                return listSellers;
             }
             else
                 return null;

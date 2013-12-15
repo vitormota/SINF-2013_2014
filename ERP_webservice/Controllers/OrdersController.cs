@@ -23,9 +23,14 @@ namespace FirstREST.Controllers
 		//
 		// GET: api/orders?clienteId=username
 		//
-		public IEnumerable<Lib_Primavera.Model.Order> Get(string clienteId)
+		public IEnumerable<Lib_Primavera.Model.Order> Get(string id, string userId)
 		{
-			return Lib_Primavera.Comercial.OrdersList(clienteId);
+            if (id == "vendor")
+                return Lib_Primavera.Comercial.OrdersListVendor(userId);
+            if (id == "client")
+			    return Lib_Primavera.Comercial.OrdersList(userId);
+
+            return null;
 		}
 
 		//

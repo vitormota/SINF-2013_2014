@@ -7,24 +7,16 @@
 					//TODO: acertar os endereços
 					case 'enc':
 						//$end = 'http://localhost/sinf/api/orders.php';
-						$end = 'http://localhost:49174/api/orders?clienteId='.$_SESSION['user_id'];
+						$end = 'http://localhost:49174/api/orders/get?id=client&userId='.$_SESSION['user_id'];
 						//echo($end);
 						$request = callAPI($end);
 						include ('includes/clients/listaEncomendas.php');
 						break;
 					case 'vend':
 					//TODO: fazer vendedores/empregados
-						//$end = 'http://localhost/sinf/api/vendedores.php';
-						$end = 'http://localhost:49174/api/vendedores/';
+						$end = 'http://localhost:49174/api/utilizadores/get?id=client&userId='.$_SESSION['user_id'].'&filter=yes';
 						$request = callAPI($end);
 						include ('includes/clients/listaVendedores.php');
-						break;
-					case 'cli':
-						//$end = 'http://localhost/sinf/api/vendedores.php';
-						$end = 'http://localhost:49174/api/clientes/';
-						$request = callAPI($end);
-						include ('includes/clients/listaClientes.php');
-						echo('<p>EM CONTRUÇÃO</p>');
 						break;
 					case 'perf':
 						//$end = 'http://localhost/sinf/api/pfile.php';
@@ -34,7 +26,7 @@
 						break;
 					case 'encDet':
 						//$end = 'http://localhost/sinf/api/vendedores.php';
-						$end = 'http://localhost:49174/api/orders/';
+						$end = 'http://localhost:49174/api/orders/get?id=client&userId='.$_SESSION['user_id'];
 						$request = callAPI($end);
 						include ('includes/clients/encomendaDetalhada.php');
 						break;

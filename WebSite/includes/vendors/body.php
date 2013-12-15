@@ -6,13 +6,13 @@
 				{
 					//TODO: acertar os endereços
 					case 'enc':
-						$end = 'http://localhost:49174/api/orders/';
+						$end = 'http://localhost:49174/api/orders/get?id=vendor&userId='.$_SESSION['user_id'];
 						//echo($end);
 						$request = callAPI($end);
 						include ('includes/vendors/listaEncomendas.php');
 						break;
 					case 'cli':
-						$end = 'http://localhost:49174/api/utilizadores/get/clientes/';
+						$end = 'http://localhost:49174/api/utilizadores/get?id=seller&userId='.$_SESSION['user_id'].'&filter=yes';
 						$request = callAPI($end);
 						include ('includes/vendors/listaClientes.php');
 						break;
@@ -23,7 +23,7 @@
 						break;		
 					case 'encDet':
 						//$end = 'http://localhost/sinf/api/vendedores.php';
-						$end = 'http://localhost:49174/api/orders/';
+						$end = 'http://localhost:49174/api/orders/get?id=vendor&userId='.$_SESSION['user_id'];
 						$request = callAPI($end);
 						include ('includes/vendors/encomendaDetalhada.php');
 						break;				
