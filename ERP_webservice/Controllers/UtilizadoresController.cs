@@ -33,20 +33,20 @@ namespace FirstREST.Controllers
 			}
 		}
 		// GET api/cliente/5 
-		public Utilizador Get(string id,string id2)
-		{
-			Lib_Primavera.Model.Utilizador cliente = Lib_Primavera.Comercial.GetClienteUser(id);
-			if (cliente == null)
-			{
-				throw new HttpResponseException(
-				Request.CreateResponse(HttpStatusCode.NotFound));
+		//public Utilizador Get(string id,string id2)
+		//{
+		//	Lib_Primavera.Model.Utilizador cliente = Lib_Primavera.Comercial.GetClienteUser(id);
+		//	if (cliente == null)
+		//	{
+		//		throw new HttpResponseException(
+		//		Request.CreateResponse(HttpStatusCode.NotFound));
 
-			}
-			else
-			{
-				return cliente;
-			}
-		}
+		//	}
+		//	else
+		//	{
+		//		return cliente;
+		//	}
+		//}
 
 		//public HttpResponseMessage Post(Lib_Primavera.Model.Utilizador cliente)
 		//{
@@ -107,5 +107,19 @@ namespace FirstREST.Controllers
 			}
 		}
 
+		public IEnumerable<Lib_Primavera.Model.Utilizador> Get(string type, string id)
+		{
+			if(String.Compare(type,"seller")==0){
+				return Lib_Primavera.Comercial.getClientsFromSeller(id);
+			}
+			else if (String.Compare(type, "client") == 0)
+			{
+				return Lib_Primavera.Comercial.getSellersFromClient(id);
+			}
+			else
+			{
+				return null;
+			}	
+		}
 	}
 }

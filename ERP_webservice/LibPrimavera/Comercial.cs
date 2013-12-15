@@ -377,28 +377,35 @@ namespace FirstREST.Lib_Primavera
 				return null;
 		}
 
-		# region Cliente
-		public static List<Model.Cliente> ListaClientes()
+		# region Cliente
+		public static List<Model.Utilizador> ListaClientes()
 		{
 			ErpBS objMotor = new ErpBS();
-			//MotorPrimavera mp = new MotorPrimavera();
+			//MotorPrimavera mp = new MotorPrimavera();
 			StdBELista objList;
-			Model.Cliente cli = new Model.Cliente();
-			List<Model.Cliente> listClientes = new List<Model.Cliente>();
+			Model.Utilizador cli = new Model.Utilizador();
+			List<Model.Utilizador> listClientes = new List<Model.Utilizador>();
 			if (PriEngine.Platform.Inicializada)
 			{
-
 				//if (PriEngine.InitializeCompany("BELAFLOR", "admin", "admin") == true){
-				//objList = PriEngine.Engine.Comercial.Clientes.LstClientes();
+				//objList = PriEngine.Engine.Comercial.Clientes.LstClientes();
 				String query = "SELECT * FROM PRIBELAFLOR.dbo.Clientes";
 				objList = PriEngine.Engine.Consulta(query);
 				while (!objList.NoFim())
 				{
-					cli = new Model.Cliente();
-					cli.CodCliente = objList.Valor("Cliente");
-					cli.NomeCliente = objList.Valor("Nome");
+					cli = new Model.Utilizador();
+					cli.Cod = objList.Valor("Cliente");
+					cli.Tipo = 3;
+					cli.Nome = objList.Valor("Nome");
+					cli.Morada = objList.Valor("Fac_Mor");
+					cli.Localidade = objList.Valor("Fac_Local");
+					cli.CP = objList.Valor("Fac_Cp");
+					cli.CPLocal = objList.Valor("Fac_Cploc");
+					cli.Telefone = objList.Valor("Fac_Tel");
+					cli.Fax = objList.Valor("Fac_Fax");
+					cli.Pais = objList.Valor("Pais");
 					cli.Moeda = objList.Valor("Moeda");
-					//cli.NumContribuinte = objList.Valor("NumContribuinte");
+					cli.NumContribuinte = objList.Valor("NumContrib");
 					listClientes.Add(cli);
 					objList.Seguinte();
 				}
@@ -448,21 +455,31 @@ namespace FirstREST.Lib_Primavera
 				return null;
 		}
 
-		public static Lib_Primavera.Model.Cliente GetCliente(string codCliente)
+		public static Lib_Primavera.Model.Utilizador GetCliente(string codCliente)
 		{
 			ErpBS objMotor = new ErpBS();
-			GcpBECliente objCli = new GcpBECliente();
-			Model.Cliente myCli = new Model.Cliente();
-			if (PriEngine.InitializeCompany("BELAFLOR", "", "") == true)
+			StdBELista objCli;
+			Model.Utilizador mycli = new Model.Utilizador();
+			if (PriEngine.Platform.Inicializada)
 			{
-				if (PriEngine.Engine.Comercial.Clientes.Existe(codCliente) == true)
+				//if (PriEngine.InitializeCompany("BELAFLOR", "admin", "admin") == true){
+				String query = "SELECT * FROM PRIBELAFLOR.dbo.Clientes where Cliente = '" + codCliente + "'";
+				objCli = PriEngine.Engine.Consulta(query);
+				if (objCli.NumLinhas() > 0)
 				{
-					objCli = PriEngine.Engine.Comercial.Clientes.Edita(codCliente);
-					myCli.CodCliente = objCli.get_Cliente();
-					myCli.NomeCliente = objCli.get_Nome();
-					myCli.Moeda = objCli.get_Moeda();
-					myCli.NumContribuinte = objCli.get_NumContribuinte();
-					return myCli;
+					mycli.Cod = objCli.Valor("Cliente");
+					mycli.Tipo = 3;
+					mycli.Nome = objCli.Valor("Nome");
+					mycli.Morada = objCli.Valor("Fac_Mor");
+					mycli.Localidade = objCli.Valor("Fac_Local");
+					mycli.CP = objCli.Valor("Fac_Cp");
+					mycli.CPLocal = objCli.Valor("Fac_Cploc");
+					mycli.Telefone = objCli.Valor("Fac_Tel");
+					mycli.Fax = objCli.Valor("Fac_Fax");
+					mycli.Pais = objCli.Valor("Pais");
+					mycli.Moeda = objCli.Valor("Moeda");
+					mycli.NumContribuinte = objCli.Valor("NumContrib");
+					return mycli;
 				}
 				else
 				{
@@ -789,5 +806,80 @@ namespace FirstREST.Lib_Primavera
             else
                 return null;
         }
-    }
+
+		public static IEnumerable<Model.Utilizador> getClientsFromSeller(string id)
+		{
+			StdBELista objList;
+			Model.Utilizador cli = new Model.Utilizador();
+			List<Model.Utilizador> listClientes = new List<Model.Utilizador>();
+			if (PriEngine.Platform.Inicializada)
+			{
+				//if (PriEngine.InitializeCompany("BELAFLOR", "admin", "admin") == true){
+				//objList = PriEngine.Engine.Comercial.Clientes.LstClientes();
+				String query = "SELECT Cliente from PRIBELAFLOR.dbo.Clientes where Cliente in (SELECT Entidade from PRIBELAFLOR.dbo.CabecDoc where Utilizador like '"+id+"')";
+				objList = PriEngine.Engine.Consulta(query);
+				while (!objList.NoFim())
+				{
+					//cli = new Model.Utilizador();
+					//cli = GetCliente(objList.Valor("Cliente"));
+					listClientes.Add(GetCliente(objList.Valor("Cliente")));
+					objList.Seguinte();
+				}
+				return listClientes;
+			}
+			else
+				return null;
+		}
+
+		public static IEnumerable<Model.Utilizador> getSellersFromClient(string id)
+		{
+			StdBELista objList;
+			Model.Utilizador cli = new Model.Utilizador();
+			List<Model.Utilizador> listSellers = new List<Model.Utilizador>();
+			if (PriEngine.Platform.Inicializada)
+			{
+				//if (PriEngine.InitializeCompany("BELAFLOR", "admin", "admin") == true){
+				//objList = PriEngine.Engine.Comercial.Clientes.LstClientes();
+				String query = "SELECT Codigo from PRIEMPRE.dbo.Utilizadores where Codigo in (SELECT Utilizador from PRIBELAFLOR.dbo.CabecDoc where Entidade like '" + id + "')";
+				objList = PriEngine.Engine.Consulta(query);
+				while (!objList.NoFim())
+				{
+					//cli = new Model.Utilizador();
+					//cli = GetCliente(objList.Valor("Cliente"));
+					listSellers.Add(GetVendedor(objList.Valor("Codigo")));
+					objList.Seguinte();
+				}
+				return listSellers;
+			}
+			else
+				return null;
+		}
+
+		public static Lib_Primavera.Model.Utilizador GetVendedor(string codVendedor)
+		{
+			StdBELista objVend;
+			Model.Utilizador seller = new Model.Utilizador();
+			if (PriEngine.Platform.Inicializada)
+			{
+				//if (PriEngine.InitializeCompany("BELAFLOR", "admin", "admin") == true){
+				String query = "SELECT * FROM PRIEMPRE.dbo.Utilizadores WHERE PerfilSugerido = 'Comercial I' AND activo = '1' AND Codigo = '" + codVendedor + "'";
+				objVend = PriEngine.Engine.Consulta(query);
+				if (objVend.NumLinhas() > 0)
+				{
+					seller.Cod = objVend.Valor("Codigo");
+					seller.Tipo = 2;
+					seller.Nome = objVend.Valor("Nome");
+					seller.Email = objVend.Valor("Email");
+					seller.Telefone = objVend.Valor("Telemovel");
+					return seller;
+				}
+				else
+				{
+					return null;
+				}
+			}
+			else
+				return null;
+		}
+	}
 }
