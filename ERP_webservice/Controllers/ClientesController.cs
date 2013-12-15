@@ -13,14 +13,14 @@ namespace FirstREST.Controllers
 	{
 		//
 		// GET: /Clientes/
-		public IEnumerable<Lib_Primavera.Model.Cliente> Get()
+		public IEnumerable<Lib_Primavera.Model.Utilizador> Get()
 		{
 			return Lib_Primavera.Comercial.ListaClientes();
 		}
 		// GET api/cliente/5 
-		public Cliente Get(string id)
+		public Utilizador Get(string id)
 		{
-			Lib_Primavera.Model.Cliente cliente = Lib_Primavera.Comercial.GetCliente(id);
+			Lib_Primavera.Model.Utilizador cliente = Lib_Primavera.Comercial.GetCliente(id);
 			if (cliente == null)
 			{
 				throw new HttpResponseException(
@@ -32,21 +32,7 @@ namespace FirstREST.Controllers
 				return cliente;
 			}
 		}
-		// GET api/cliente/5 
-		public Cliente Get(string id,string id2)
-		{
-			Lib_Primavera.Model.Cliente cliente = Lib_Primavera.Comercial.GetCliente(id);
-			if (cliente == null)
-			{
-				throw new HttpResponseException(
-				Request.CreateResponse(HttpStatusCode.NotFound));
-
-			}
-			else
-			{
-				return cliente;
-			}
-		}
+		
 		//public HttpResponseMessage Post(Lib_Primavera.Model.Cliente cliente)
 		//{
 		//	Lib_Primavera.Model.RespostaErro erro = new Lib_Primavera.Model.RespostaErro();

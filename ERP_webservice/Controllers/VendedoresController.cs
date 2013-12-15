@@ -14,9 +14,9 @@ namespace FirstREST.Controllers
     {
         //
         // GET: api/Vendedores/
-		public IEnumerable<Lib_Primavera.Model.Vendedores> Get()
+		public IEnumerable<Lib_Primavera.Model.Utilizador> Get()
 		{
-			return Lib_Primavera.Comercial.VendedoresList();
+			return Lib_Primavera.Comercial.ListaVendedores();
 		}
 
     }

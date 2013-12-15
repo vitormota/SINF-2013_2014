@@ -11,16 +11,38 @@ namespace FirstREST.Controllers
 {
 	public class UtilizadoresController : ApiController
 	{
-		//
-		// GET: /Clientes/
-		public IEnumerable<Lib_Primavera.Model.Utilizador> Get()
+        public IEnumerable<Lib_Primavera.Model.Utilizador> Get(string id)
+        {
+            if (id == "clientes")
+                return listaClientes();
+            if (id == "vendedores")
+                return listaVendedores();
+            if (id == "admins")
+                return listaAdmins();
+
+            return null;
+        }
+        public Utilizador Get(string id, string userId)
+        {
+            if (id == "clientes")
+                return oneCliente(userId);
+            if (id == "vendedores")
+                return oneVendedor(userId);
+            if (id == "admins")
+                return oneAdmin(userId);   
+      
+            return null;
+        }
+
+		// CLIENTES
+		public IEnumerable<Lib_Primavera.Model.Utilizador> listaClientes()
 		{
-			return Lib_Primavera.Comercial.ListaUtilizadores();
+			return Lib_Primavera.Comercial.ListaClientes();
 		}
-		// GET api/cliente/5 
-		public Utilizador Get(string id)
+		
+		public Utilizador oneCliente(string id)
 		{
-			Lib_Primavera.Model.Utilizador user = Lib_Primavera.Comercial.GetClienteUser(id);
+			Lib_Primavera.Model.Utilizador user = Lib_Primavera.Comercial.GetCliente(id);
 			if (user == null)
 			{
 				throw new HttpResponseException(
@@ -32,11 +54,18 @@ namespace FirstREST.Controllers
 				return user;
 			}
 		}
-		// GET api/cliente/5 
-		public Utilizador Get(string id,string id2)
+		
+
+		// VENDEDORES
+		public IEnumerable<Lib_Primavera.Model.Utilizador> listaVendedores()
 		{
-			Lib_Primavera.Model.Utilizador cliente = Lib_Primavera.Comercial.GetClienteUser(id);
-			if (cliente == null)
+			return Lib_Primavera.Comercial.ListaVendedores();
+		}
+		
+		public Utilizador oneVendedor(string id)
+		{
+			Lib_Primavera.Model.Utilizador seller = Lib_Primavera.Comercial.GetVendedor(id);
+			if (seller == null)
 			{
 				throw new HttpResponseException(
 				Request.CreateResponse(HttpStatusCode.NotFound));
@@ -44,68 +73,30 @@ namespace FirstREST.Controllers
 			}
 			else
 			{
-				return cliente;
+				return seller;
 			}
 		}
-
-		//public HttpResponseMessage Post(Lib_Primavera.Model.Utilizador cliente)
-		//{
-		//	Lib_Primavera.Model.RespostaErro erro = new Lib_Primavera.Model.RespostaErro();
-		//	erro = Lib_Primavera.Comercial.InsereClienteObj(cliente);
-		//	if (erro.Erro == 0)
-		//	{
-		//		var response = Request.CreateResponse(
-		//		HttpStatusCode.Created, cliente);
-		//		string uri = Url.Link("DefaultApi", new { CodCliente = cliente.Cod });
-		//		response.Headers.Location = new Uri(uri);
-		//		return response;
-		//	}
-		//	else
-		//	{
-		//		return Request.CreateResponse(HttpStatusCode.BadRequest);
-		//	}
-		//}
-
-		public HttpResponseMessage Put(int id, Lib_Primavera.Model.Utilizador cliente)
+		
+		// ADMINS
+		public IEnumerable<Lib_Primavera.Model.Utilizador> listaAdmins()
 		{
-			Lib_Primavera.Model.RespostaErro erro = new Lib_Primavera.Model.RespostaErro();
-			try
-			{
-				erro = Lib_Primavera.Comercial.UpdCliente(cliente);
-				if (erro.Erro == 0)
-				{
-					return Request.CreateResponse(HttpStatusCode.OK, erro.Descricao);
-				}
-				else
-				{
-					return Request.CreateResponse(HttpStatusCode.NotFound, erro.Descricao);
-				}
-			}
-			catch (Exception exc)
-			{
-				return Request.CreateResponse(HttpStatusCode.BadRequest, erro.Descricao);
-			}
+			return Lib_Primavera.Comercial.ListaAdmins();
 		}
-		public HttpResponseMessage Delete(string id)
+		
+		public Utilizador oneAdmin(string id)
 		{
-			Lib_Primavera.Model.RespostaErro erro = new Lib_Primavera.Model.RespostaErro();
-			try
+			Lib_Primavera.Model.Utilizador adm = Lib_Primavera.Comercial.GetAdmin(id);
+			if (adm == null)
 			{
-				erro = Lib_Primavera.Comercial.DelCliente(id);
-				if (erro.Erro == 0)
-				{
-					return Request.CreateResponse(HttpStatusCode.OK, erro.Descricao);
-				}
-				else
-				{
-					return Request.CreateResponse(HttpStatusCode.NotFound, erro.Descricao);
-				}
+				throw new HttpResponseException(
+				Request.CreateResponse(HttpStatusCode.NotFound));
+
 			}
-			catch (Exception exc)
+			else
 			{
-				return Request.CreateResponse(HttpStatusCode.BadRequest, erro.Descricao);
+				return adm;
 			}
 		}
-
+		
 	}
 }

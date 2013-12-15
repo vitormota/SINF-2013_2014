@@ -1,0 +1,291 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+
+body {
+  line-height: 1;
+}
+
+ol, ul {
+  list-style: none;
+}
+
+blockquote, q {
+  quotes: none;
+}
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none;
+}
+
+a {
+  color: #00a1d2;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+
+body, .login-submit, .login-submit:before, .login-submit:after {
+  background: #373737 url("../img/bg.png") 0 0 repeat;
+}
+
+body {
+  font: 14px/20px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  //color: #404040;
+  color: #fff;
+}
+
+ label {
+  width: 100px;
+  line-height: 40px;
+  padding: 5px;
+  font-weight: 100;
+  text-align: right;
+  letter-spacing: 1px;
+}
+
+
+/* -- Geral -- */
+
+#mainframe {
+	margin: 5px auto;
+	min-width: 768px;
+	max-width:800px;
+	padding: 0px;
+}
+#midframe {
+	background: url(../img/bg.png) repeat-x 0px 4px;
+}
+#filters {
+	margin: 0px auto;
+	//border: 1px solid #555;
+	padding:5px;
+	background: url(../img/bg.png) repeat;
+}
+h1 {
+	background: #00a1d2;
+	color: white;
+	margin-bottom: 2px;
+	padding: 5px;
+	font-size: 120%
+	
+}
+
+h2 {
+  color:grey;
+  margin-top: 5px;
+  font-size:120%;
+}
+
+#formMail{
+  margin-top: 15px;
+  border-color: grey;
+  border:2px solid grey;
+  border-radius:15px;
+  padding: 10px;
+}
+
+.hidden
+{
+  display:none;
+}
+
+
+/* -- Imputs --	*/
+´
+input, button, select {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 300;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+input[type=text], input[type=date], input[type=search],input[type=email], input[type=tel],input[type=number],textarea,select {
+  padding: 0 10px;
+  width: auto;
+  height: 30px;
+  color: #bbb;
+  text-shadow: 1px 1px 1px black;
+  background: rgba(0, 0, 0, 0.16);
+  border: 0;
+  border-radius: 5px;
+  -webkit-box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.06);
+}
+input[type=text]:focus, input[type=password]:focus,input[type=email]:focus select:focus  {
+  color: white;
+  background: rgba(0, 0, 0, 0.1);
+  outline: 0;
+}
+select:focus {
+  color: black;
+}
+.lt-ie9 input[type=text], .lt-ie9 input[type=date], .lt-ie9 input[type=search] {
+  line-height: 40px;
+  background: #282828;
+}
+
+/* -- Tabelas --*/
+
+.z-table {
+    border: 1px solid #555;
+}
+
+.z-table td {
+    border-left: 1px solid #555;
+    border-top: 1px solid #555;
+    padding: 10px;
+    text-align: left;    
+}
+
+.z-table th, .z-table th:hover {
+    border-left: 1px solid #555;
+	border-bottom: 1px solid #828282;
+    padding: 20px;  
+    background-color:#151515 !important;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#151515), to(#404040)) !important;
+    background-image: -webkit-linear-gradient(top, #151515, #404040) !important;
+    background-image:    -moz-linear-gradient(top, #151515, #404040) !important;
+    background-image:     -ms-linear-gradient(top, #151515, #404040) !important;
+    background-image:      -o-linear-gradient(top, #151515, #404040) !important;
+    background-image:         linear-gradient(top, #151515, #404040) !important;
+	color:#fff !important;
+	font-weight:normal;
+}
+
+#formMail textarea{
+  width: 500px;
+  height: 150px;
+  resize:none;
+}
+
+/*.z-table tbody tr:nth-child(even) {
+    background: #000 !important;
+	color:#fff;
+}*/
+
+.z-table tr:hover *{
+    background: #eeeeee;
+	color:#000;
+}
+
+.z-table tr {
+	background:#404040;
+	color:#fff;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+	width:100%;
+	//-webkit-box-shadow:  0px 2px 1px 5px rgba(242, 242, 242, 0.1);
+    //box-shadow:  0px 2px 1px 5px rgba(242, 242, 242, 0.1);
+}
+
+/* -- Menu -- */
+
+#dashhead .right {
+	float: right;
+    vertical-align: middle;
+	margin: 2% 0%;
+}
+
+#dashhead .names {
+	text-transform: capitalize;
+}
+
+#dashhead ul,
+#dashhead ul li,
+#dashhead ul li a {
+  padding: 0;
+  margin: 0;
+  line-height: 1;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+#dashhead:before,
+#dashhead:after,
+#dashhead > ul:before,
+#dashhead > ul:after {
+  content: '';
+  display: table;
+}
+#dashhead:after,
+#dashhead > ul:after {
+  clear: both;
+}
+#dashhead {
+  zoom: 1;
+  height: 62px;
+  background: #00a1d2;
+  border-radius: 2px;
+  width: 100%;
+}
+#dashhead ul {
+  background: url(../img/nav-bg.png) repeat-x 0px 0px;
+  height: 69px;
+}
+#dashhead ul li {
+  float: left;
+  list-style: none;
+}
+#dashhead ul li a {
+  display: block;
+  height: 37px;
+  padding: 15px 30px 0;
+  margin: 4px 2px 0;
+  border-radius: 2px 2px 0 0;
+  text-decoration: none;
+  font-size: 15px;
+  color: white;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.75);
+  font-weight: 400;
+  opacity: .9;
+}
+#dashhead ul li:first-child a {
+  margin: 4px 2px 0 0;
+}
+#dashhead ul li a:hover,
+#dashhead ul li a:active {
+  background: #00a1d2;
+  display: block;
+  height: 37px;
+  margin-top: 0px;
+  padding-top: 22px;
+  color: #616161;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.35);
+  opacity: 1;
+}
+
+::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+
