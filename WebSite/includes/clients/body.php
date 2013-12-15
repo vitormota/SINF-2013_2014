@@ -18,7 +18,6 @@
 						$end = 'http://localhost:49174/api/vendedores/';
 						$request = callAPI($end);
 						include ('includes/clients/listaVendedores.php');
-						echo('<p>EM CONTRUÇÃO</p>');
 						break;
 					case 'cli':
 						//$end = 'http://localhost/sinf/api/vendedores.php';
@@ -29,10 +28,9 @@
 						break;
 					case 'perf':
 						//$end = 'http://localhost/sinf/api/pfile.php';
-						$end = 'http://localhost:49174/api/vendedores/';
+						$end = 'http://localhost:49174/api/utilizadores/get?id=clientes&userid='.$_SESSION['user_id'];
 						$request = callAPI($end);
-						include ('includes/clients/profile.php');
-						echo('<p>EM CONTRUÇÃO</p>');
+						include ('includes/clients/profileUtilizador.php');
 						break;
 					case 'encDet':
 						//$end = 'http://localhost/sinf/api/vendedores.php';
@@ -40,12 +38,10 @@
 						$request = callAPI($end);
 						include ('includes/clients/encomendaDetalhada.php');
 						break;
-					case 'detUtilizador':
-						//TODO METER API PARA USER DETAILS
-						//$end = 'http://localhost:49174/api/vendedores/';
-						//$request = callAPI($end);
-						include ('includes/clients/detalheUtilizador.php');
-						echo('<p>EM CONTRUÇÃO</p>');
+					case 'vendDet':
+						$end = 'http://localhost:49174/api/utilizadores/get?id=vendedores&userid='.$_GET['userID'];
+						$request = callAPI($end);
+						include ('includes/clients/profileUtilizador.php');
 						break;
 					default:
 						echo('<h1>Opção Inválida</h1>');

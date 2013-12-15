@@ -15,6 +15,13 @@
 
 <p><label for="#">Cliente</label><input type="text" name="cliente" id="cliente" value='<?php echo ($encomenda["CodClient"]);?>' disabled></p>
 
+<p>
+	<label for="#">Responsável</label><input type="text" name="responsable" id="responsable" value='<?php echo ($encomenda["responsable"]);?>' disabled>
+	<?php if ($encomenda["responsable"] != "ADMIN") {
+		echo "<a href='dashboard.php?menu=vendDet&userID=".$encomenda["responsable"]."'>Ver Responsável</a>";
+	} ?>
+</p>
+
 <p><label for="#">Total de Mercadoria</label><input type="text" name="totMerc" id="totMerc" value='<?php echo ($encomenda["totalMerc"]);?>' disabled></p>
 
 <p><label for="#">Total IVA</label><input type="text" name="iva" id="iva" value='<?php echo( $encomenda["totalIva"]);?>' disabled></p>
@@ -31,8 +38,6 @@
 
 <p><label for="#">Estado de Encomenda</label><input type="text" name="status" id="status" value='<?php echo ($encomenda["estadoFact"]);?>' disabled></p>
 
-<p><label for="#">Data de Última Modificação</label><input type="text" name="lastChange" id="lastChange" value='' disabled></p>
-
-<p><a href="./dashboard.php?menu=detUtilizador&utilizador=TODO_METER_VENDEDOR_ID">Vendedor da Encomenda</a></p>
+<p><label for="#">Data de Última Modificação</label><input type="text" name="lastChange" id="lastChange" value='<?php echo ($encomenda["lastUpdated"].' dias');?>' disabled></p>
 
 <?php } ?>

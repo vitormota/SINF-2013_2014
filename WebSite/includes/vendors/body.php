@@ -6,26 +6,31 @@
 				{
 					//TODO: acertar os endereços
 					case 'enc':
-						//$end = 'http://localhost/sinf/api/orders.php';
-						$end = 'http://localhost:49174/api/orders?clienteId='.$_SESSION['user_id'];
+						$end = 'http://localhost:49174/api/orders/';
 						//echo($end);
-						$resquest = callAPI($end);
+						$request = callAPI($end);
 						include ('includes/vendors/listaEncomendas.php');
-						echo('<p>EM CONTRUÇÃO</p>');
 						break;
 					case 'cli':
-						//$end = 'http://localhost/sinf/api/vendedores.php';
-						$end = 'http://localhost:49174/api/clientes/';
-						$resquest = callAPI($end);
+						$end = 'http://localhost:49174/api/utilizadores/get/clientes/';
+						$request = callAPI($end);
 						include ('includes/vendors/listaClientes.php');
-						echo('<p>EM CONTRUÇÃO</p>');
 						break;
-					case 'perf':
-						$end = 'http://localhost/sinf/api/pfile.php';
-						//$end = 'http://localhost:49174/api/perfil/';
-						$resquest = callAPI($end);
-						include ('includes/vendors/profile.php');
-						echo('<p>EM CONTRUÇÃO</p>');
+					case 'vendDet':
+						$end = 'http://localhost:49174/api/utilizadores/get?id=vendedores&userid='.$_SESSION['user_id'];
+						$request = callAPI($end);
+						include ('includes/vendors/profileUtilizador.php');
+						break;		
+					case 'encDet':
+						//$end = 'http://localhost/sinf/api/vendedores.php';
+						$end = 'http://localhost:49174/api/orders/';
+						$request = callAPI($end);
+						include ('includes/vendors/encomendaDetalhada.php');
+						break;				
+					case 'cliDet':
+						$end = 'http://localhost:49174/api/utilizadores/get?id=clientes&userid='.$_GET['userID'];
+						$request = callAPI($end);
+						include ('includes/vendors/profileUtilizador.php');
 						break;
 					default:
 						echo('<h1>Opção Inválida</h1>');
@@ -33,7 +38,7 @@
 				}
 		}
 		catch(Exception $e){
-			$resquest = FALSE;
+			$request = FALSE;
 			echo("<p> Warning: Exception catch server probably offline!</p>");
 		}	 
 	?>

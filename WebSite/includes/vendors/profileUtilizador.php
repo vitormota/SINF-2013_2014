@@ -29,10 +29,7 @@ else
 		<p><label for="#">E-mail</label><input type="email" name="email" id="id" value='<?php echo ($request["Email"]);?>' disabled></p>
 		<p><label for="#">Telefone</label><input type="tel" name="telefone" id="telefone" value='<?php echo( $request["Telefone"]);?>' disabled></p>
 
-
 	<?php
-
-	include_once("mailForm.php");
 }
  
 ?> 

@@ -67,11 +67,6 @@ namespace FirstREST.Lib_Primavera.Model
             get;
             set;
         }
-        public string Idioma
-        {
-            get;
-            set;
-        }
         public string NumContribuinte
         {
             get;

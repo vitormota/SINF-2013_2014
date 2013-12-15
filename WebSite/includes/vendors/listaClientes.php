@@ -1,18 +1,19 @@
 <h1>Listagem de Clientes</h1>
-<table class="z-table">
+<table id="clientesLink" class="z-table">
 	<thead>
 		<th>Nome</th><th>Contribuinte</th>
 	</thead>
 	<?PHP 
 	try{
-		if($resquest)
+		if($request)
 		{		
-			//print_r($resquest);
-			foreach($resquest as $line){
+			//print_r($request);
+			foreach($request as $line){
 				//TODO trocar os nomes das variaveis para as que são devolvidas pela api da primavera
 				echo('<tr>');
-				echo('<td>'.$line['NomeCliente'].'</td>');
-				echo('<td>'.$line['NumContribuinte'].'</td>');
+				echo('<td class="hidden">'.$line['Cod'].'</td>');
+				echo('<td>'.$line['Nome'].'</td>');
+				echo('<td>'.$line['Telefone'].'</td>');
 				echo('</tr>');
 			}
 		}

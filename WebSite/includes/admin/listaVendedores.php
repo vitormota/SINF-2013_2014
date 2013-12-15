@@ -3,6 +3,7 @@
 	<thead>
 		<th>Nome</th><th>Email</th><th>Contacto</th>
 	</thead>
+	<tbody>
 	<?PHP 
 	try{
 		if($request)
@@ -22,4 +23,5 @@
 		echo("<p> Warning: server return bad data. Please try again or contact admin!<p>");
 	}
 	?>
+</tbody>
 </table>

@@ -303,6 +303,7 @@ namespace FirstREST.Lib_Primavera
                     seller.Nome = objList.Valor("Nome");
                     seller.Email = objList.Valor("Email");
                     seller.Telefone = objList.Valor("Telemovel");
+                    seller.Idioma = objList.Valor("Idioma");
                     listVendedores.Add(seller);
                     objList.Seguinte();
                 }
@@ -329,6 +330,7 @@ namespace FirstREST.Lib_Primavera
                     seller.Nome = objVend.Valor("Nome");
                     seller.Email = objVend.Valor("Email");
                     seller.Telefone = objVend.Valor("Telemovel");
+                    seller.Idioma = objVend.Valor("Idioma");
                     return seller;
                 }
                 else
@@ -433,6 +435,7 @@ namespace FirstREST.Lib_Primavera
                     cli.Telefone = objList.Valor("Fac_Tel");
                     cli.Fax = objList.Valor("Fac_Fax");
                     cli.Pais = objList.Valor("Pais");
+                    cli.Idioma = objList.Valor("Idioma");
                     cli.Moeda = objList.Valor("Moeda");
                     cli.NumContribuinte = objList.Valor("NumContrib");
                     listClientes.Add(cli);
@@ -472,6 +475,7 @@ namespace FirstREST.Lib_Primavera
                     cli.Telefone = objList.Valor("Fac_Tel");
                     cli.Fax = objList.Valor("Fac_Fax");
                     cli.Pais = objList.Valor("Pais");
+                    cli.Idioma = objList.Valor("Idioma");
                     cli.Moeda = objList.Valor("Moeda");
                     cli.NumContribuinte = objList.Valor("NumContrib");
                     listClientes.Add(cli);
@@ -505,6 +509,7 @@ namespace FirstREST.Lib_Primavera
                     mycli.Telefone = objCli.Valor("Fac_Tel");
                     mycli.Fax = objCli.Valor("Fac_Fax");
                     mycli.Pais = objCli.Valor("Pais");
+                    mycli.Idioma = objCli.Valor("Idioma");
                     mycli.Moeda = objCli.Valor("Moeda");
                     mycli.NumContribuinte = objCli.Valor("NumContrib");
                     return mycli;
@@ -541,6 +546,7 @@ namespace FirstREST.Lib_Primavera
                     mycli.Telefone = objCli.Valor("Fac_Tel");
                     mycli.Fax = objCli.Valor("Fac_Fax");
                     mycli.Pais = objCli.Valor("Pais");
+                    mycli.Idioma = objCli.Valor("Idioma");
                     mycli.Moeda = objCli.Valor("Moeda");
                     mycli.NumContribuinte = objCli.Valor("NumContrib");
                     return mycli;
@@ -595,6 +601,7 @@ namespace FirstREST.Lib_Primavera
                 myAdm.Nome = objAdm.Valor("Nome");
                 myAdm.Email = objAdm.Valor("Email");
                 myAdm.Telefone = objAdm.Valor("Telemovel");
+                myAdm.Idioma = objAdm.Valor("Idioma");
                 return myAdm;
 
             }
@@ -701,6 +708,7 @@ namespace FirstREST.Lib_Primavera
                     adm.Nome = objList.Valor("Nome");
                     adm.Email = objList.Valor("Email");
                     adm.Telefone = objList.Valor("Telemovel");
+                    adm.Idioma = objList.Valor("Idioma");
                     listAdmins.Add(adm);
                     objList.Seguinte();
                 }

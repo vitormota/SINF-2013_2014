@@ -13,7 +13,18 @@
 <h1>Encomenda - <?php echo ($encomenda['docNum']);?></h1>
 <p><label for="#">Modo de Expedição</label><input type="text" name="modExp" id="modExp" value='<?php echo ($encomenda["modExpedicao"]);?>'disabled></p>
 
-<p><label for="#">Cliente</label><input type="text" name="cliente" id="cliente" value='<?php echo ($encomenda["CodClient"]);?>' disabled></p>
+<p>
+	<label for="#">Cliente</label><input type="text" name="cliente" id="cliente" value='<?php echo ($encomenda["CodClient"]);?>' disabled>
+	<a href='dashboard.php?menu=cliDet&userID=<?php echo ($encomenda["CodClient"]);?>'>Ver Cliente</a>
+</p>
+
+<p>
+	<label for="#">Responsável</label><input type="text" name="responsable" id="responsable" value='<?php echo ($encomenda["responsable"]);?>' disabled>
+	<?php if ($encomenda["responsable"] != "ADMIN") {
+		echo "<a href='dashboard.php?menu=vendDet&userID=".$encomenda["responsable"]."'>Ver Responsável</a>";
+	} ?>
+</p>
+
 
 <p><label for="#">Total de Mercadoria</label><input type="text" name="totMerc" id="totMerc" value='<?php echo ($encomenda["totalMerc"]);?>' disabled></p>
 
