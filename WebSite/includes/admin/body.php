@@ -14,13 +14,13 @@
 					case 'vend':
 					//TODO: fazer vendedores/empregados
 						//$end = 'http://localhost/sinf/api/vendedores.php';
-						$end = 'http://localhost:49174/api/utilizadores/get/vendedores/';
+						$end = 'http://localhost:49174/api/utilizadores/get?id=vendedores&userid=none&filter=none';
 						$request = callAPI($end);
 						include ('includes/admin/listaVendedores.php');
 						break;
 					case 'cli':
 						//$end = 'http://localhost/sinf/api/vendedores.php';
-						$end = 'http://localhost:49174/api/utilizadores/get/clientes/';
+						$end = 'http://localhost:49174/api/utilizadores/get?id=clientes&userid=none&filter=none';
 						$request = callAPI($end);
 						include ('includes/admin/listaClientes.php');
 						break;
